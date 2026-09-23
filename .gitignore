@@ -1,0 +1,9 @@
+# Copias y archivos temporales de editores
+*~
+*.swp
+*.swo
+__pycache__/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
