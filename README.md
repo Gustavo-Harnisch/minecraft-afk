@@ -54,7 +54,7 @@ La primera salida debe indicar Python 3.10 o una versión posterior; la segunda 
 
 ## Instalar y abrir la aplicación
 
-Realiza estos pasos en orden y en la misma terminal. La instalación de dependencias necesita permisos de administrador y puede pedir tu contraseña; Git descargará después los archivos del proyecto en una carpeta llamada `minecraft-afk`. Si ya tienes el repositorio descargado, puedes omitir la descarga y abrir una terminal dentro de la carpeta que contiene `main.py`.
+Realiza estos pasos en orden. La instalación de dependencias necesita permisos de administrador y puede pedir tu contraseña. Puedes descargar un paquete de la versión publicada o clonar el repositorio con Git. Si ya tienes los archivos, puedes omitir la descarga y abrir una terminal dentro de la carpeta que contiene `main.py`.
 
 ### 1. Instalar las dependencias
 
@@ -67,7 +67,14 @@ sudo apt install git python3 python3-gi gir1.2-gtk-3.0 xdotool
 
 ### 2. Descargar el proyecto
 
-Clona el repositorio y entra en la carpeta recién creada. Puedes ejecutar estos comandos desde el directorio en el que quieras guardar el proyecto.
+Abre [GitHub Releases](https://github.com/Gustavo-Harnisch/minecraft-afk/releases/latest) y descarga `minecraft-afk-2.0.0-linux.tar.gz` o su alternativa `.zip`. Ambos incluyen la aplicación, la documentación y las traducciones compiladas. Extrae el archivo desde el administrador de archivos y abre una terminal en la carpeta resultante. Si prefieres extraer el archivo `.tar.gz` desde la terminal, ejecuta estos comandos en la carpeta donde lo descargaste:
+
+```bash
+tar -xzf minecraft-afk-2.0.0-linux.tar.gz
+cd minecraft-afk-2.0.0
+```
+
+La release también incluye `SHA256SUMS`. Si lo descargas en la misma carpeta que el paquete, puedes comprobar su integridad con `sha256sum --ignore-missing -c SHA256SUMS`. Como alternativa a los paquetes, puedes descargar el código con Git; en ese caso, la carpeta se llamará `minecraft-afk`:
 
 ```bash
 git clone https://github.com/Gustavo-Harnisch/minecraft-afk.git
@@ -86,7 +93,7 @@ La terminal seguirá ocupada mientras la ventana esté abierta; es normal. Abrir
 
 ## Abrirla de nuevo
 
-Para volver a usar Minecraft AFK, abre una terminal en la carpeta del proyecto y ejecuta `/usr/bin/python3 main.py`. En Linux Mint puedes entrar en esa carpeta desde el administrador de archivos y utilizar la opción **Abrir en una terminal**. Comprueba que estás en la carpeta que contiene `main.py`, especialmente si has movido el repositorio después de descargarlo.
+Para volver a usar Minecraft AFK, abre una terminal en la carpeta del proyecto y ejecuta `/usr/bin/python3 main.py`. En Linux Mint puedes entrar en esa carpeta desde el administrador de archivos y utilizar la opción **Abrir en una terminal**. Comprueba que estás en la carpeta que contiene `main.py`, ya sea `minecraft-afk-2.0.0` si extrajiste el paquete o `minecraft-afk` si clonaste el repositorio.
 
 La instalación de dependencias y la descarga se realizan una vez; en los siguientes inicios se recuperan las preferencias guardadas. Si una granja quedó ejecutándose al cerrar la ventana, la aplicación consulta su estado al abrirse de nuevo. Para finalizar una ejecución, utiliza los controles de parada que se describen a continuación.
 
@@ -158,7 +165,7 @@ Puedes elegir el idioma de una ejecución de consola con `MINECRAFT_AFK_LANGUAGE
 
 ## Resolver problemas frecuentes
 
-**No se encuentra `main.py`.** Abre la terminal en la carpeta `minecraft-afk` descargada del repositorio. El comando de inicio busca ese archivo en el directorio actual; si estás en otra carpeta, entra primero en la ubicación donde guardaste el proyecto.
+**No se encuentra `main.py`.** Abre la terminal en la carpeta extraída del paquete o clonada del repositorio, donde se encuentra `main.py`. El comando de inicio busca ese archivo en el directorio actual; si estás en otra carpeta, entra primero en la ubicación donde guardaste el proyecto.
 
 **Aparece `No module named gi` o un error relacionado con GTK.** Revisa que hayas instalado `python3-gi` y `gir1.2-gtk-3.0`, y abre la aplicación con `/usr/bin/python3 main.py`. Un intérprete de Python distinto del sistema puede no tener acceso a los paquetes instalados mediante `apt`.
 

@@ -7,3 +7,6 @@ __pycache__/
 # Archivos del sistema
 .DS_Store
 Thumbs.db
+
+# Paquetes generados para GitHub Releases
+dist/
