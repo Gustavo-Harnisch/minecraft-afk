@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -u
 
+source "$(dirname -- "${BASH_SOURCE[0]}")/i18n.sh"
+
 # Fuerza el punto como separador decimal en awk/printf. Esto evita que
 # locales como es_CL/es_ES escriban 657,45 en el archivo de estado, valor
 # que Python no puede interpretar directamente como float.
@@ -41,8 +43,7 @@ estimated_duration_seconds=""
 start_epoch=""
 
 usage() {
-    cat <<'EOF'
-Uso:
+    message 'Uso:
   stone-farm.sh start [opciones]
   stone-farm.sh calibrate --seconds 1-60 --initial-durability ENTERO
   stone-farm.sh calculate [opciones]
@@ -67,8 +68,7 @@ Calibración:
 
 La Stone Farm mantiene el botón izquierdo presionado continuamente. Si
 --auto-stop es 1, lo libera automáticamente al cumplirse el tiempo estimado
-para llegar a la durabilidad mínima.
-EOF
+para llegar a la durabilidad mínima.'
 }
 
 is_running() {
@@ -90,8 +90,8 @@ cleanup_files() {
 
 require_dependencies() {
     if ! command -v xdotool >/dev/null 2>&1; then
-        echo "Error: xdotool no está instalado." >&2
-        echo "Instálalo con: sudo apt install xdotool" >&2
+        message 'Error: xdotool no está instalado.' >&2
+        message 'Instálalo con: sudo apt install xdotool' >&2
         return 1
     fi
 }
@@ -105,7 +105,7 @@ set_pickaxe() {
         diamond) pickaxe_label="Pico de diamante"; pickaxe_speed="8"; max_durability="1561" ;;
         netherite) pickaxe_label="Pico de netherita"; pickaxe_speed="9"; max_durability="2031" ;;
         *)
-            echo "Pico desconocido: $1" >&2
+            message 'Pico desconocido: %s' "$1" >&2
             return 1
             ;;
     esac
@@ -113,7 +113,7 @@ set_pickaxe() {
 
 validate_binary() {
     [[ "$2" == "0" || "$2" == "1" ]] || {
-        echo "Error: $1 debe ser 0 o 1." >&2
+        message 'Error: %s debe ser 0 o 1.' "$1" >&2
         return 1
     }
 }
@@ -121,7 +121,7 @@ validate_binary() {
 validate_range() {
     local name="$1" value="$2" minimum="$3" maximum="$4"
     if ! [[ "$value" =~ ^[0-9]+$ ]] || (( value < minimum || value > maximum )); then
-        echo "Error: $name debe estar entre $minimum y $maximum." >&2
+        message 'Error: %s debe estar entre %s y %s.' "$name" "$minimum" "$maximum" >&2
         return 1
     fi
 }
@@ -129,7 +129,7 @@ validate_range() {
 validate_nonnegative_integer() {
     local name="$1" value="$2"
     if ! [[ "$value" =~ ^[0-9]+$ ]]; then
-        echo "Error: $name debe ser un entero >= 0." >&2
+        message 'Error: %s debe ser un entero >= 0.' "$name" >&2
         return 1
     fi
 }
@@ -138,7 +138,7 @@ validate_positive_decimal() {
     local name="$1" value="$2"
     value="${value/,/.}"
     if ! [[ "$value" =~ ^[0-9]+([.][0-9]+)?$ ]] || ! awk -v value="$value" 'BEGIN { exit !(value > 0) }'; then
-        echo "Error: $name debe ser un número mayor que 0." >&2
+        message 'Error: %s debe ser un número mayor que 0.' "$name" >&2
         return 1
     fi
 }
@@ -166,7 +166,7 @@ parse_options() {
             --calibrated-seconds-per-durability) (($# >= 2)) || return 1; calibrated_seconds_per_durability="$2"; shift 2 ;;
             --auto-stop) (($# >= 2)) || return 1; auto_stop="$2"; shift 2 ;;
             --help|-h) usage; exit 0 ;;
-            *) echo "Opción desconocida: $1" >&2; usage >&2; return 1 ;;
+            *) message 'Opción desconocida: %s' "$1" >&2; usage >&2; return 1 ;;
         esac
     done
 
@@ -178,22 +178,22 @@ parse_options() {
     validate_range "Haste" "$haste" 0 2 || return 1
     case "$calculation_method" in
         theoretical|calibrated) ;;
-        *) echo "Error: calculation-method debe ser theoretical o calibrated." >&2; return 1 ;;
+        *) message 'Error: calculation-method debe ser theoretical o calibrated.' >&2; return 1 ;;
     esac
     calibrated_seconds_per_durability="${calibrated_seconds_per_durability/,/.}"
     validate_positive_decimal "calibrated-seconds-per-durability" "$calibrated_seconds_per_durability" || return 1
     validate_binary "auto-stop" "$auto_stop" || return 1
 
     if (( current_durability < 1 )); then
-        echo "Error: current-durability debe ser al menos 1." >&2
+        message 'Error: current-durability debe ser al menos 1.' >&2
         return 1
     fi
     if (( current_durability > max_durability )); then
-        echo "Error: la durabilidad máxima de $pickaxe_label es $max_durability." >&2
+        message 'Error: la durabilidad máxima de %s es %s.' "$(message "$pickaxe_label")" "$max_durability" >&2
         return 1
     fi
     if (( minimum_durability >= current_durability )); then
-        echo "Error: minimum-durability debe ser menor que current-durability." >&2
+        message 'Error: minimum-durability debe ser menor que current-durability.' >&2
         return 1
     fi
 }
@@ -291,7 +291,7 @@ write_state() {
 
 start_command() {
     if is_running; then
-        echo "Minecraft AFK ya está activo (PID $pid)."
+        message 'Minecraft AFK ya está activo (PID %s).' "$pid"
         status_command
         return 0
     fi
@@ -324,26 +324,26 @@ start_command() {
     printf '%s\n' "$pid" > "$PIDFILE"
     write_state
 
-    echo "Stone Mining Farm iniciada (PID $pid)."
-    echo "El minado comenzará en $START_DELAY_SECONDS segundos."
-    echo "Clic izquierdo mantenido. Pico: $pickaxe_label."
-    echo "Durabilidad: $current_durability → $minimum_durability | bloques estimados: $expected_blocks"
-    echo "Segundos/durabilidad: $seconds_per_durability s."
+    message 'Stone Mining Farm iniciada (PID %s).' "$pid"
+    message 'El minado comenzará en %s segundos.' "$START_DELAY_SECONDS"
+    message 'Clic izquierdo mantenido. Pico: %s.' "$(message "$pickaxe_label")"
+    message 'Durabilidad: %s → %s | bloques estimados: %s' "$current_durability" "$minimum_durability" "$expected_blocks"
+    message 'Segundos/durabilidad: %s s.' "$seconds_per_durability"
     if [[ "$calculation_method" == "calibrated" ]]; then
-        echo "Método: calibrado (incluye el retraso real de la farm)."
+        message 'Método: calibrado (incluye el retraso real de la farm).'
     else
-        echo "Método: teórico."
+        message 'Método: teórico.'
     fi
     if [[ "$auto_stop" == "1" ]]; then
-        echo "Auto-stop en aproximadamente $estimated_duration_seconds s."
+        message 'Auto-stop en aproximadamente %s s.' "$estimated_duration_seconds"
     else
-        echo "Auto-stop desactivado; usa Detener para liberar el clic."
+        message 'Auto-stop desactivado; usa Detener para liberar el clic.'
     fi
 }
 
 calibrate_command() {
     if is_running; then
-        echo "Minecraft AFK ya está activo (PID $pid)."
+        message 'Minecraft AFK ya está activo (PID %s).' "$pid"
         status_command
         return 0
     fi
@@ -354,12 +354,18 @@ calibrate_command() {
     while (($# > 0)); do
         case "$1" in
             --seconds)
-                (($# >= 2)) || { echo "Error: falta valor para --seconds." >&2; return 1; }
+                if (($# < 2)); then
+                    message 'Error: falta valor para --seconds.' >&2
+                    return 1
+                fi
                 calibration_seconds="${2/,/.}"
                 shift 2
                 ;;
             --initial-durability)
-                (($# >= 2)) || { echo "Error: falta valor para --initial-durability." >&2; return 1; }
+                if (($# < 2)); then
+                    message 'Error: falta valor para --initial-durability.' >&2
+                    return 1
+                fi
                 initial_durability="$2"
                 shift 2
                 ;;
@@ -368,7 +374,7 @@ calibrate_command() {
                 return 0
                 ;;
             *)
-                echo "Opción desconocida para calibración: $1" >&2
+                message 'Opción desconocida para calibración: %s' "$1" >&2
                 return 1
                 ;;
         esac
@@ -376,12 +382,12 @@ calibrate_command() {
 
     validate_positive_decimal "seconds" "$calibration_seconds" || return 1
     if ! awk -v value="$calibration_seconds" 'BEGIN { exit !(value >= 1 && value <= 60) }'; then
-        echo "Error: --seconds debe estar entre 1 y 60." >&2
+        message 'Error: --seconds debe estar entre 1 y 60.' >&2
         return 1
     fi
     validate_nonnegative_integer "initial-durability" "$initial_durability" || return 1
     if (( initial_durability < 1 )); then
-        echo "Error: --initial-durability debe ser al menos 1." >&2
+        message 'Error: --initial-durability debe ser al menos 1.' >&2
         return 1
     fi
 
@@ -415,10 +421,10 @@ calibrate_command() {
     } > "$tmp_state"
     mv -f -- "$tmp_state" "$STATEFILE"
 
-    echo "Calibración iniciada (PID $pid)."
-    echo "Tienes $START_DELAY_SECONDS segundos para volver a Minecraft y apuntar al bloque."
-    echo "Después mantendrá el clic izquierdo durante $calibration_seconds segundos y se detendrá automáticamente."
-    echo "Durabilidad inicial registrada: $initial_durability."
+    message 'Calibración iniciada (PID %s).' "$pid"
+    message 'Tienes %s segundos para volver a Minecraft y apuntar al bloque.' "$START_DELAY_SECONDS"
+    message 'Después mantendrá el clic izquierdo durante %s segundos y se detendrá automáticamente.' "$calibration_seconds"
+    message 'Durabilidad inicial registrada: %s.' "$initial_durability"
 }
 
 stop_command() {
@@ -428,23 +434,22 @@ stop_command() {
     fi
     cleanup_files
     release_mouse
-    echo "Minecraft AFK detenido. Botón izquierdo liberado."
+    message 'Minecraft AFK detenido. Botón izquierdo liberado.'
 }
 
 status_command() {
     if is_running; then
-        echo "Minecraft AFK está activo (PID $pid)."
+        message 'Minecraft AFK está activo (PID %s).' "$pid"
         [ -f "$STATEFILE" ] && sed 's/^/  /' "$STATEFILE"
     else
         cleanup_files
         release_mouse
-        echo "Minecraft AFK está detenido."
+        message 'Minecraft AFK está detenido.'
     fi
 }
 
 reference_table() {
-    cat <<'EOF'
-Durabilidad máxima de picos vanilla (Java Edition):
+    message 'Durabilidad máxima de picos vanilla (Java Edition):
 
   Madera       59
   Piedra      131
@@ -455,8 +460,7 @@ Durabilidad máxima de picos vanilla (Java Edition):
 
 Unbreaking en herramientas multiplica la duración esperada por (nivel + 1),
 pero es aleatorio. El temporizador es por ello una estimación cuando
-Unbreaking > 0.
-EOF
+Unbreaking > 0.'
 }
 
 command="${1:-help}"
@@ -469,5 +473,5 @@ case "$command" in
     status) status_command ;;
     table|reference) reference_table ;;
     help|-h|--help) usage ;;
-    *) echo "Comando desconocido: $command" >&2; usage >&2; exit 1 ;;
+    *) message 'Comando desconocido: %s' "$command" >&2; usage >&2; exit 1 ;;
 esac

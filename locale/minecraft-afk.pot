@@ -1,0 +1,900 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Minecraft AFK package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Minecraft AFK 1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-24 12:44-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: minecraft_afk/window.py:828
+msgid " Con Unbreaking seguirá existiendo variación aleatoria."
+msgstr ""
+
+#: minecraft_afk/window.py:1223
+msgid "ACTIVO"
+msgstr ""
+
+#: minecraft_afk/window.py:1134
+msgid "Activa"
+msgstr ""
+
+#: minecraft_afk/window.py:229
+msgid "Activa una prueba controlada: 20 s para prepararte y después mantiene el clic durante el tiempo indicado"
+msgstr ""
+
+#: minecraft_afk/window.py:711
+msgid "Activado"
+msgstr ""
+
+#: minecraft_afk/window.py:419
+msgid "Actualizar"
+msgstr ""
+
+#: minecraft_afk/window.py:87 minecraft_afk/window.py:461
+msgid "Ajustes"
+msgstr ""
+
+#: minecraft_afk/window.py:434
+msgid "Aquí se muestra la salida de los scripts. No necesitas escribir comandos."
+msgstr ""
+
+#: minecraft_afk/window.py:477
+msgid "Archivo de configuración"
+msgstr ""
+
+#: scripts/stone-farm.sh:340
+msgid "Auto-stop desactivado; usa Detener para liberar el clic."
+msgstr ""
+
+#: scripts/stone-farm.sh:338
+msgid "Auto-stop en aproximadamente %s s."
+msgstr ""
+
+#: minecraft_afk/window.py:502
+msgid "Automático (idioma del sistema)"
+msgstr ""
+
+#: minecraft_afk/window.py:327
+msgid "Base temporal usada"
+msgstr ""
+
+#: minecraft_afk/window.py:184
+msgid "Bloque"
+msgstr ""
+
+#: minecraft_afk/window.py:325 minecraft_afk/window.py:407
+msgid "Bloques estimados"
+msgstr ""
+
+#: minecraft_afk/window.py:262
+msgid "CALCULAR Y GUARDAR CALIBRACIÓN"
+msgstr ""
+
+#: minecraft_afk/window.py:1173
+msgid "CALIBRACIÓN COMPLETADA"
+msgstr ""
+
+#: minecraft_afk/window.py:1114
+msgid "CALIBRANDO"
+msgstr ""
+
+#: minecraft_afk/window.py:1179
+msgid "Calibración 100%"
+msgstr ""
+
+#: minecraft_afk/window.py:1122
+msgid "Calibración Stone Farm"
+msgstr ""
+
+#: minecraft_afk/window.py:823
+#, python-brace-format
+msgid "Calibración activa: {seconds:.3f} s por punto de durabilidad. Este valor ya incorpora el tiempo muerto del generador agua/lava. Recalibra si cambias la farm, el pico, Efficiency, Unbreaking o Haste."
+msgstr ""
+
+#: minecraft_afk/window.py:1180
+msgid "Calibración completada"
+msgstr ""
+
+#: minecraft_afk/window.py:769
+#, python-brace-format
+msgid "Calibración guardada | Segundos/durabilidad: {rate:.3f} s | Prueba: {before} → {after} en {seconds:.0f} s"
+msgstr ""
+
+#: scripts/stone-farm.sh:424
+msgid "Calibración iniciada (PID %s)."
+msgstr ""
+
+#: minecraft_afk/window.py:940
+#, python-brace-format
+msgid "Calibración iniciada | Duración de prueba: {seconds:.0f} s | Durabilidad inicial: {before} | Segundos/durabilidad actual: {rate:.3f} s"
+msgstr ""
+
+#: minecraft_afk/window.py:923
+msgid "Calibración inválida: la durabilidad inicial debe ser al menos 1."
+msgstr ""
+
+#: minecraft_afk/window.py:753
+#, python-brace-format
+msgid "Calibración inválida: {error}"
+msgstr ""
+
+#: minecraft_afk/window.py:881 minecraft_afk/window.py:1213
+msgid "Calibrado"
+msgstr ""
+
+#: minecraft_afk/window.py:187
+msgid "Calibrado · Cobblestone Farm"
+msgstr ""
+
+#: minecraft_afk/window.py:809
+msgid "Calibrado · datos reales de la farm"
+msgstr ""
+
+#: minecraft_afk/window.py:1086
+#, python-brace-format
+msgid "Calibrando {percent}%"
+msgstr ""
+
+#: minecraft_afk/window.py:1102
+#, python-brace-format
+msgid "Calibrando · {clock}"
+msgstr ""
+
+#: minecraft_afk/window.py:1055
+msgid "Cambia a Minecraft y apunta al bloque de la cobblestone farm. La prueba comenzará automáticamente."
+msgstr ""
+
+#: minecraft_afk/window.py:1057
+msgid "Cambia a Minecraft y apunta al bloque objetivo."
+msgstr ""
+
+#: minecraft_afk/window.py:1071
+msgid "Clic izquierdo mantenido · Auto-stop desactivado."
+msgstr ""
+
+#: scripts/stone-farm.sh:329
+msgid "Clic izquierdo mantenido. Pico: %s."
+msgstr ""
+
+#: minecraft_afk/window.py:182
+msgid "Cobblestone / Stone"
+msgstr ""
+
+#: scripts/minecraft-afk.sh:74 scripts/mob-farm.sh:142
+#: scripts/stone-farm.sh:476
+msgid "Comando desconocido: %s"
+msgstr ""
+
+#: minecraft_afk/window.py:499
+msgid "Compatibilidad"
+msgstr ""
+
+#: minecraft_afk/window.py:1189
+msgid "Completado"
+msgstr ""
+
+#: minecraft_afk/window.py:1188
+msgid "Completado 100%"
+msgstr ""
+
+#: minecraft_afk/window.py:169
+msgid "Configuración de la farm"
+msgstr ""
+
+#: minecraft_afk/window.py:877
+#, python-brace-format
+msgid "Configuración inválida: {error}"
+msgstr ""
+
+#: minecraft_afk/window.py:98
+msgid "Control gráfico de farms para Linux"
+msgstr ""
+
+#: minecraft_afk/window.py:146
+msgid "DETENER"
+msgstr ""
+
+#: minecraft_afk/window.py:109 minecraft_afk/window.py:422
+msgid "DETENER TODO"
+msgstr ""
+
+#: minecraft_afk/window.py:362
+msgid "DETENER Y LIBERAR CLIC"
+msgstr ""
+
+#: minecraft_afk/window.py:1223
+msgid "DETENIDO"
+msgstr ""
+
+#: minecraft_afk/window.py:236 minecraft_afk/window.py:711
+msgid "Desactivado"
+msgstr ""
+
+#: scripts/stone-farm.sh:426
+msgid "Después mantendrá el clic izquierdo durante %s segundos y se detendrá automáticamente."
+msgstr ""
+
+#: minecraft_afk/window.py:269
+msgid "Detener automáticamente al llegar al tiempo estimado"
+msgstr ""
+
+#: minecraft_afk/window.py:1134
+msgid "Detenida"
+msgstr ""
+
+#: minecraft_afk/window.py:76 minecraft_afk/window.py:105
+#: minecraft_afk/window.py:135 minecraft_afk/window.py:1130
+msgid "Detenido"
+msgstr ""
+
+#: minecraft_afk/window.py:324
+msgid "Durabilidad a consumir"
+msgstr ""
+
+#: minecraft_afk/window.py:200
+msgid "Durabilidad actual"
+msgstr ""
+
+#: minecraft_afk/window.py:258
+msgid "Durabilidad del pico al terminar la prueba"
+msgstr ""
+
+#: minecraft_afk/window.py:252
+msgid "Durabilidad del pico justo antes de iniciar la prueba"
+msgstr ""
+
+#: minecraft_afk/window.py:329
+msgid "Durabilidad final estimada"
+msgstr ""
+
+#: scripts/stone-farm.sh:427
+msgid "Durabilidad inicial registrada: %s."
+msgstr ""
+
+#: minecraft_afk/window.py:323
+msgid "Durabilidad máxima"
+msgstr ""
+
+#: scripts/stone-farm.sh:452
+msgid ""
+"Durabilidad máxima de picos vanilla (Java Edition):\n"
+"\n"
+"  Madera       59\n"
+"  Piedra      131\n"
+"  Hierro      250\n"
+"  Oro          32\n"
+"  Diamante   1561\n"
+"  Netherita  2031\n"
+"\n"
+"Unbreaking en herramientas multiplica la duración esperada por (nivel + 1),\n"
+"pero es aleatorio. El temporizador es por ello una estimación cuando\n"
+"Unbreaking > 0."
+msgstr ""
+
+#: minecraft_afk/window.py:206
+msgid "Durabilidad mínima"
+msgstr ""
+
+#: minecraft_afk/window.py:405
+msgid "Durabilidad objetivo"
+msgstr ""
+
+#: minecraft_afk/window.py:204
+msgid "Durabilidad objetivo en la que quieres detener la farm"
+msgstr ""
+
+#: minecraft_afk/window.py:198
+msgid "Durabilidad que muestra actualmente el pico en Minecraft"
+msgstr ""
+
+#: scripts/stone-farm.sh:330
+msgid "Durabilidad: %s → %s | bloques estimados: %s"
+msgstr ""
+
+#: minecraft_afk/mining.py:84
+msgid "Efficiency debe estar entre 0 y 5"
+msgstr ""
+
+#: minecraft_afk/window.py:975
+#, python-brace-format
+msgid "El comando terminó con código {code}."
+msgstr ""
+
+#: scripts/stone-farm.sh:328
+msgid "El minado comenzará en %s segundos."
+msgstr ""
+
+#: minecraft_afk/scripts.py:54
+msgid "El script debe estar dentro de la carpeta scripts"
+msgstr ""
+
+#: minecraft_afk/window.py:406
+msgid "Encantamientos / efectos"
+msgstr ""
+
+#: minecraft_afk/window.py:980
+#, python-brace-format
+msgid "Error ejecutando {command}: {message}"
+msgstr ""
+
+#: scripts/stone-farm.sh:124
+msgid "Error: %s debe estar entre %s y %s."
+msgstr ""
+
+#: scripts/stone-farm.sh:116
+msgid "Error: %s debe ser 0 o 1."
+msgstr ""
+
+#: scripts/stone-farm.sh:132
+msgid "Error: %s debe ser un entero >= 0."
+msgstr ""
+
+#: scripts/stone-farm.sh:141
+msgid "Error: %s debe ser un número mayor que 0."
+msgstr ""
+
+#: scripts/stone-farm.sh:390
+msgid "Error: --initial-durability debe ser al menos 1."
+msgstr ""
+
+#: scripts/mob-farm.sh:58
+msgid "Error: --interval necesita un valor."
+msgstr ""
+
+#: scripts/stone-farm.sh:385
+msgid "Error: --seconds debe estar entre 1 y 60."
+msgstr ""
+
+#: scripts/stone-farm.sh:181
+msgid "Error: calculation-method debe ser theoretical o calibrated."
+msgstr ""
+
+#: scripts/stone-farm.sh:188
+msgid "Error: current-durability debe ser al menos 1."
+msgstr ""
+
+#: scripts/mob-farm.sh:76
+msgid "Error: el intervalo debe ser un número >= 0.01."
+msgstr ""
+
+#: scripts/stone-farm.sh:366
+msgid "Error: falta valor para --initial-durability."
+msgstr ""
+
+#: scripts/stone-farm.sh:358
+msgid "Error: falta valor para --seconds."
+msgstr ""
+
+#: scripts/stone-farm.sh:192
+msgid "Error: la durabilidad máxima de %s es %s."
+msgstr ""
+
+#: scripts/stone-farm.sh:196
+msgid "Error: minimum-durability debe ser menor que current-durability."
+msgstr ""
+
+#: scripts/mob-farm.sh:40 scripts/stone-farm.sh:93
+msgid "Error: xdotool no está instalado."
+msgstr ""
+
+#: minecraft_afk/window.py:307 minecraft_afk/window.py:1030
+#: minecraft_afk/window.py:1041 minecraft_afk/window.py:1195
+msgid "Esperando"
+msgstr ""
+
+#: minecraft_afk/window.py:1041
+msgid "Esperando datos del proceso"
+msgstr ""
+
+#: minecraft_afk/window.py:85 minecraft_afk/window.py:137
+#: minecraft_afk/window.py:388
+msgid "Estado"
+msgstr ""
+
+#: minecraft_afk/window.py:488
+msgid "Estado de ejecución"
+msgstr ""
+
+#: minecraft_afk/window.py:400
+msgid "Estado general"
+msgstr ""
+
+#: minecraft_afk/window.py:357
+msgid "Hace 20 s de preparación y luego mantiene el clic durante el tiempo de calibración"
+msgstr ""
+
+#: minecraft_afk/mining.py:88
+msgid "Haste debe estar entre 0 y 2"
+msgstr ""
+
+#: minecraft_afk/window.py:354
+msgid "INICIAR CALIBRACIÓN"
+msgstr ""
+
+#: minecraft_afk/window.py:349
+msgid "INICIAR MINADO CONTINUO"
+msgstr ""
+
+#: minecraft_afk/window.py:141
+msgid "INICIAR MOB FARM"
+msgstr ""
+
+#: minecraft_afk/window.py:508
+msgid "Idioma"
+msgstr ""
+
+#: scripts/minecraft-afk.sh:66
+msgid "Indica un modo: mob o stone."
+msgstr ""
+
+#: minecraft_afk/window.py:389
+msgid "Información del proceso AFK que está ejecutándose actualmente."
+msgstr ""
+
+#: minecraft_afk/window.py:1203
+#, python-brace-format
+msgid "Inicio: {durability}"
+msgstr ""
+
+#: scripts/mob-farm.sh:41 scripts/stone-farm.sh:94
+msgid "Instálalo con: sudo apt install xdotool"
+msgstr ""
+
+#: minecraft_afk/window.py:403
+msgid "Intervalo Mob Farm"
+msgstr ""
+
+#: minecraft_afk/window.py:133
+msgid "Intervalo entre ataques"
+msgstr ""
+
+#: scripts/mob-farm.sh:112
+msgid "Intervalo: %s s"
+msgstr ""
+
+#: minecraft_afk/window.py:288 minecraft_afk/window.py:1110
+#: minecraft_afk/window.py:1191
+msgid "LISTO"
+msgstr ""
+
+#: minecraft_afk/mining.py:92
+msgid "La calibración debe ser mayor que 0 segundos"
+msgstr ""
+
+#: minecraft_afk/window.py:462
+msgid "La configuración de la GUI se guarda automáticamente."
+msgstr ""
+
+#: minecraft_afk/mining.py:94
+msgid "La durabilidad actual debe ser al menos 1"
+msgstr ""
+
+#: minecraft_afk/mining.py:163
+msgid "La durabilidad final no puede ser negativa"
+msgstr ""
+
+#: minecraft_afk/mining.py:161
+msgid "La durabilidad inicial debe ser mayor que la final"
+msgstr ""
+
+#: minecraft_afk/mining.py:97
+#, python-brace-format
+msgid "La durabilidad máxima de {pickaxe} es {maximum}"
+msgstr ""
+
+#: minecraft_afk/mining.py:103
+msgid "La durabilidad mínima debe ser menor que la actual"
+msgstr ""
+
+#: minecraft_afk/mining.py:101
+msgid "La durabilidad mínima no puede ser negativa"
+msgstr ""
+
+#: minecraft_afk/mining.py:165
+msgid "La duración de la prueba debe ser mayor que 0"
+msgstr ""
+
+#: minecraft_afk/mining.py:112
+msgid "La velocidad calculada no permite romper Stone"
+msgstr ""
+
+#: minecraft_afk/window.py:452
+msgid "Limpiar logs"
+msgstr ""
+
+#: minecraft_afk/window.py:298 minecraft_afk/window.py:1030
+#: minecraft_afk/window.py:1193
+msgid "Listo para iniciar"
+msgstr ""
+
+#: minecraft_afk/window.py:86 minecraft_afk/window.py:433
+msgid "Logs"
+msgstr ""
+
+#: minecraft_afk/window.py:1113
+msgid "MINANDO"
+msgstr ""
+
+#: minecraft_afk/window.py:1206
+msgid "Midiendo"
+msgstr ""
+
+#: minecraft_afk/window.py:1073
+msgid "Minando sin límite"
+msgstr ""
+
+#: minecraft_afk/window.py:1094
+#, python-brace-format
+msgid "Minando {percent}%"
+msgstr ""
+
+#: minecraft_afk/window.py:1104
+#, python-brace-format
+msgid "Minando · {clock}"
+msgstr ""
+
+#: scripts/minecraft-afk.sh:54 scripts/mob-farm.sh:122
+msgid "Minecraft AFK detenido."
+msgstr ""
+
+#: scripts/stone-farm.sh:437
+msgid "Minecraft AFK detenido. Botón izquierdo liberado."
+msgstr ""
+
+#: scripts/minecraft-afk.sh:38 scripts/mob-farm.sh:127
+#: scripts/stone-farm.sh:442
+msgid "Minecraft AFK está activo (PID %s)."
+msgstr ""
+
+#: scripts/minecraft-afk.sh:41 scripts/mob-farm.sh:130
+#: scripts/stone-farm.sh:447
+msgid "Minecraft AFK está detenido."
+msgstr ""
+
+#: scripts/mob-farm.sh:91 scripts/stone-farm.sh:294 scripts/stone-farm.sh:346
+msgid "Minecraft AFK ya está activo (PID %s)."
+msgstr ""
+
+#: scripts/mob-farm.sh:111
+msgid "Mob Farm iniciada (PID %s)."
+msgstr ""
+
+#: minecraft_afk/window.py:401
+msgid "Modo"
+msgstr ""
+
+#: minecraft_afk/window.py:242
+msgid "Modo calibración"
+msgstr ""
+
+#: minecraft_afk/window.py:832
+msgid "Modo teórico: Unbreaking hace que el consumo sea aleatorio y este cálculo no incluye el tiempo real que tarda tu generador de agua/lava en crear el siguiente bloque."
+msgstr ""
+
+#: minecraft_afk/window.py:837
+msgid "Modo teórico: calcula la minería vanilla, pero no mide el retraso real del generador de cobblestone."
+msgstr ""
+
+#: minecraft_afk/window.py:189 minecraft_afk/window.py:326
+msgid "Método de cálculo"
+msgstr ""
+
+#: minecraft_afk/mining.py:90
+msgid "Método de cálculo desconocido"
+msgstr ""
+
+#: scripts/stone-farm.sh:333
+msgid "Método: calibrado (incluye el retraso real de la farm)."
+msgstr ""
+
+#: scripts/stone-farm.sh:335
+msgid "Método: teórico."
+msgstr ""
+
+#: minecraft_afk/window.py:531
+msgid "No se pudo guardar el idioma. Revisa los logs."
+msgstr ""
+
+#: minecraft_afk/window.py:781
+#, python-brace-format
+msgid "No se pudo guardar la configuración: {error}"
+msgstr ""
+
+#: minecraft_afk/window.py:1182
+msgid "OBJETIVO COMPLETADO"
+msgstr ""
+
+#: scripts/stone-farm.sh:377
+msgid "Opción desconocida para calibración: %s"
+msgstr ""
+
+#: scripts/mob-farm.sh:69 scripts/stone-farm.sh:169
+msgid "Opción desconocida: %s"
+msgstr ""
+
+#: minecraft_afk/window.py:853 minecraft_afk/window.py:1111
+msgid "PREPARACIÓN"
+msgstr ""
+
+#: minecraft_afk/window.py:927 minecraft_afk/window.py:1112
+msgid "PREPARACIÓN · CALIBRACIÓN"
+msgstr ""
+
+#: minecraft_afk/window.py:194 minecraft_afk/window.py:322
+#: minecraft_afk/window.py:404
+msgid "Pico"
+msgstr ""
+
+#: minecraft_afk/mining.py:37
+msgid "Pico de diamante"
+msgstr ""
+
+#: minecraft_afk/mining.py:35
+msgid "Pico de hierro"
+msgstr ""
+
+#: minecraft_afk/mining.py:33
+msgid "Pico de madera"
+msgstr ""
+
+#: minecraft_afk/mining.py:38
+msgid "Pico de netherita"
+msgstr ""
+
+#: minecraft_afk/mining.py:36
+msgid "Pico de oro"
+msgstr ""
+
+#: minecraft_afk/mining.py:34
+msgid "Pico de piedra"
+msgstr ""
+
+#: scripts/stone-farm.sh:108
+msgid "Pico desconocido: %s"
+msgstr ""
+
+#: minecraft_afk/mining.py:81
+#, python-brace-format
+msgid "Pico desconocido: {pickaxe}"
+msgstr ""
+
+#: minecraft_afk/window.py:859 minecraft_afk/window.py:933
+msgid "Preparación 0%"
+msgstr ""
+
+#: minecraft_afk/window.py:1064
+#, python-brace-format
+msgid "Preparación {percent}%"
+msgstr ""
+
+#: minecraft_afk/window.py:860 minecraft_afk/window.py:934
+msgid "Preparación · 00:20"
+msgstr ""
+
+#: minecraft_afk/window.py:1100
+#, python-brace-format
+msgid "Preparación · {clock}"
+msgstr ""
+
+#: minecraft_afk/window.py:930
+msgid "Prepárate: cambia a Minecraft y apunta al bloque de la cobblestone farm."
+msgstr ""
+
+#: minecraft_afk/window.py:856
+msgid "Prepárate: cambia a Minecraft y apunta al bloque que quieres minar."
+msgstr ""
+
+#: minecraft_afk/window.py:1084
+msgid "Prueba controlada: manteniendo el clic durante el tiempo seleccionado."
+msgstr ""
+
+#: minecraft_afk/window.py:1204
+#, python-brace-format
+msgid "Prueba de {seconds} s"
+msgstr ""
+
+#: minecraft_afk/window.py:1176
+msgid "Prueba terminada. Mira la durabilidad del pico, escríbela en 'Prueba: durabilidad después' y pulsa CALCULAR Y GUARDAR CALIBRACIÓN."
+msgstr ""
+
+#: minecraft_afk/window.py:254
+msgid "Prueba: durabilidad antes"
+msgstr ""
+
+#: minecraft_afk/window.py:260
+msgid "Prueba: durabilidad después"
+msgstr ""
+
+#: minecraft_afk/window.py:120
+msgid "Realiza un clic izquierdo automático con el intervalo que definas."
+msgstr ""
+
+#: minecraft_afk/window.py:523
+msgid "Reinicia la aplicación para aplicar el idioma."
+msgstr ""
+
+#: minecraft_afk/window.py:492
+msgid "Requiere xdotool y una sesión X11. En Linux Mint puedes instalar xdotool con: sudo apt install xdotool"
+msgstr ""
+
+#: minecraft_afk/window.py:266
+msgid "Resultado"
+msgstr ""
+
+#: minecraft_afk/window.py:314
+msgid "Resumen"
+msgstr ""
+
+#: minecraft_afk/scripts.py:66
+#, python-brace-format
+msgid "Script desconocido: {name}. Disponibles: {available}"
+msgstr ""
+
+#: minecraft_afk/window.py:483
+msgid "Scripts Bash"
+msgstr ""
+
+#: minecraft_afk/window.py:221
+msgid "Segundos / durabilidad"
+msgstr ""
+
+#: minecraft_afk/window.py:132
+msgid "Segundos entre cada ataque"
+msgstr ""
+
+#: minecraft_afk/window.py:219
+msgid "Segundos reales que tu granja tarda en consumir 1 punto de durabilidad"
+msgstr ""
+
+#: scripts/stone-farm.sh:331
+msgid "Segundos/durabilidad: %s s."
+msgstr ""
+
+#: minecraft_afk/window.py:884
+#, python-brace-format
+msgid "Stone Farm | Método: {method} | Segundos/durabilidad: {rate:.3f} s | Durabilidad: {current} → {minimum} | Tiempo objetivo: {duration}"
+msgstr ""
+
+#: scripts/stone-farm.sh:327
+msgid "Stone Mining Farm iniciada (PID %s)."
+msgstr ""
+
+#: minecraft_afk/window.py:330
+msgid "Temporizador activo"
+msgstr ""
+
+#: minecraft_afk/window.py:280
+msgid "Temporizador de durabilidad / calibración"
+msgstr ""
+
+#: minecraft_afk/window.py:408
+msgid "Temporizador restante"
+msgstr ""
+
+#: minecraft_afk/window.py:881 minecraft_afk/window.py:1213
+msgid "Teórico"
+msgstr ""
+
+#: minecraft_afk/window.py:814
+msgid "Teórico · mecánica vanilla"
+msgstr ""
+
+#: minecraft_afk/window.py:188
+msgid "Teórico · minería continua"
+msgstr ""
+
+#: minecraft_afk/window.py:248
+msgid "Tiempo de calibración"
+msgstr ""
+
+#: minecraft_afk/window.py:328
+msgid "Tiempo estimado hasta el objetivo"
+msgstr ""
+
+#: minecraft_afk/window.py:246
+msgid "Tiempo exacto que durará la prueba de calibración. Máximo: 60 segundos."
+msgstr ""
+
+#: minecraft_afk/window.py:1185
+msgid "Tiempo objetivo finalizado. El clic izquierdo fue liberado."
+msgstr ""
+
+#: minecraft_afk/window.py:1092
+msgid "Tiempo restante hasta alcanzar la durabilidad mínima estimada."
+msgstr ""
+
+#: scripts/stone-farm.sh:425
+msgid "Tienes %s segundos para volver a Minecraft y apuntar al bloque."
+msgstr ""
+
+#: minecraft_afk/mining.py:86
+msgid "Unbreaking debe estar entre 0 y 3"
+msgstr ""
+
+#: minecraft_afk/window.py:264
+msgid "Usa la durabilidad antes/después y el tiempo de prueba para calcular segundos por durabilidad"
+msgstr ""
+
+#: scripts/minecraft-afk.sh:13
+msgid ""
+"Uso:\n"
+"  minecraft-afk.sh start mob [opciones]\n"
+"  minecraft-afk.sh start stone [opciones]\n"
+"  minecraft-afk.sh stop\n"
+"  minecraft-afk.sh emergency-stop\n"
+"  minecraft-afk.sh status\n"
+"  minecraft-afk.sh table"
+msgstr ""
+
+#: scripts/mob-farm.sh:14
+msgid ""
+"Uso:\n"
+"  mob-farm.sh start [--interval N]\n"
+"  mob-farm.sh stop\n"
+"  mob-farm.sh status\n"
+"  mob-farm.sh help"
+msgstr ""
+
+#: scripts/stone-farm.sh:46
+msgid ""
+"Uso:\n"
+"  stone-farm.sh start [opciones]\n"
+"  stone-farm.sh calibrate --seconds 1-60 --initial-durability ENTERO\n"
+"  stone-farm.sh calculate [opciones]\n"
+"  stone-farm.sh stop\n"
+"  stone-farm.sh status\n"
+"  stone-farm.sh table\n"
+"\n"
+"Opciones:\n"
+"  --pickaxe wood|stone|iron|gold|diamond|netherite\n"
+"  --current-durability ENTERO\n"
+"  --minimum-durability ENTERO\n"
+"  --efficiency 0-5\n"
+"  --unbreaking 0-3\n"
+"  --haste 0-2\n"
+"  --calculation-method theoretical|calibrated\n"
+"  --calibrated-seconds-per-durability DECIMAL\n"
+"  --auto-stop 0|1\n"
+"\n"
+"Calibración:\n"
+"  --seconds 1-60\n"
+"  --initial-durability ENTERO\n"
+"\n"
+"La Stone Farm mantiene el botón izquierdo presionado continuamente. Si\n"
+"--auto-stop es 1, lo libera automáticamente al cumplirse el tiempo estimado\n"
+"para llegar a la durabilidad mínima."
+msgstr ""
+
+#: minecraft_afk/scripts.py:64
+msgid "ninguno"
+msgstr ""
+
+#: minecraft_afk/window.py:133
+msgid "segundos"
+msgstr ""
+
+#: minecraft_afk/window.py:1127
+#, python-brace-format
+msgid "{mode} activa"
+msgstr ""
+
+#: minecraft_afk/window.py:811
+#, python-brace-format
+msgid "{seconds:.3f} s / punto de durabilidad"
+msgstr ""
+
+#: minecraft_afk/window.py:816
+#, python-brace-format
+msgid "≈ {seconds:.2f} s / bloque"
+msgstr ""

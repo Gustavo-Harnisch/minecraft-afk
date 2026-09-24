@@ -11,6 +11,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 import math
 
+from .i18n import _, N_
+
 
 BLOCK_NAME = "Stone"
 BLOCK_HARDNESS = 1.5
@@ -28,12 +30,12 @@ class Pickaxe:
 
 
 PICKAXES: tuple[Pickaxe, ...] = (
-    Pickaxe("wood", "Pico de madera", 2.0, 59),
-    Pickaxe("stone", "Pico de piedra", 4.0, 131),
-    Pickaxe("iron", "Pico de hierro", 6.0, 250),
-    Pickaxe("gold", "Pico de oro", 12.0, 32),
-    Pickaxe("diamond", "Pico de diamante", 8.0, 1561),
-    Pickaxe("netherite", "Pico de netherita", 9.0, 2031),
+    Pickaxe("wood", N_("Pico de madera"), 2.0, 59),
+    Pickaxe("stone", N_("Pico de piedra"), 4.0, 131),
+    Pickaxe("iron", N_("Pico de hierro"), 6.0, 250),
+    Pickaxe("gold", N_("Pico de oro"), 12.0, 32),
+    Pickaxe("diamond", N_("Pico de diamante"), 8.0, 1561),
+    Pickaxe("netherite", N_("Pico de netherita"), 9.0, 2031),
 )
 PICKAXE_BY_KEY = {item.key: item for item in PICKAXES}
 
@@ -76,28 +78,29 @@ def calculate_stone_plan(
     try:
         pickaxe = PICKAXE_BY_KEY[pickaxe_key]
     except KeyError as exc:
-        raise ValueError(f"Pico desconocido: {pickaxe_key}") from exc
+        raise ValueError(_("Pico desconocido: {pickaxe}").format(pickaxe=pickaxe_key)) from exc
 
     if not 0 <= efficiency <= 5:
-        raise ValueError("Efficiency debe estar entre 0 y 5")
+        raise ValueError(_("Efficiency debe estar entre 0 y 5"))
     if not 0 <= unbreaking <= 3:
-        raise ValueError("Unbreaking debe estar entre 0 y 3")
+        raise ValueError(_("Unbreaking debe estar entre 0 y 3"))
     if not 0 <= haste <= 2:
-        raise ValueError("Haste debe estar entre 0 y 2")
+        raise ValueError(_("Haste debe estar entre 0 y 2"))
     if calculation_method not in {"theoretical", "calibrated"}:
-        raise ValueError("Método de cálculo desconocido")
+        raise ValueError(_("Método de cálculo desconocido"))
     if calibrated_seconds_per_durability <= 0:
-        raise ValueError("La calibración debe ser mayor que 0 segundos")
+        raise ValueError(_("La calibración debe ser mayor que 0 segundos"))
     if current_durability < 1:
-        raise ValueError("La durabilidad actual debe ser al menos 1")
+        raise ValueError(_("La durabilidad actual debe ser al menos 1"))
     if current_durability > pickaxe.max_durability:
         raise ValueError(
-            f"La durabilidad máxima de {pickaxe.label} es {pickaxe.max_durability}"
+            _("La durabilidad máxima de {pickaxe} es {maximum}").format(
+                pickaxe=_(pickaxe.label), maximum=pickaxe.max_durability)
         )
     if minimum_durability < 0:
-        raise ValueError("La durabilidad mínima no puede ser negativa")
+        raise ValueError(_("La durabilidad mínima no puede ser negativa"))
     if minimum_durability >= current_durability:
-        raise ValueError("La durabilidad mínima debe ser menor que la actual")
+        raise ValueError(_("La durabilidad mínima debe ser menor que la actual"))
 
     speed = pickaxe.speed
     if efficiency > 0:
@@ -106,7 +109,7 @@ def calculate_stone_plan(
 
     progress = speed / BLOCK_HARDNESS / 30.0
     if progress <= 0:
-        raise ValueError("La velocidad calculada no permite romper Stone")
+        raise ValueError(_("La velocidad calculada no permite romper Stone"))
 
     # En Java, damage > 1 implica instant mining y evita el retraso de 0.30 s.
     instant_break = progress > 1.0
@@ -155,11 +158,11 @@ def calculate_calibration(
     """Devuelve segundos reales por punto de durabilidad consumido."""
 
     if durability_before <= durability_after:
-        raise ValueError("La durabilidad inicial debe ser mayor que la final")
+        raise ValueError(_("La durabilidad inicial debe ser mayor que la final"))
     if durability_after < 0:
-        raise ValueError("La durabilidad final no puede ser negativa")
+        raise ValueError(_("La durabilidad final no puede ser negativa"))
     if test_seconds <= 0:
-        raise ValueError("La duración de la prueba debe ser mayor que 0")
+        raise ValueError(_("La duración de la prueba debe ser mayor que 0"))
     spent = durability_before - durability_after
     return test_seconds / spent
 

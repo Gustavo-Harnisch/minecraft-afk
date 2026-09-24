@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -u
 
+source "$(dirname -- "${BASH_SOURCE[0]}")/i18n.sh"
+
 readonly PIDFILE="${MINECRAFT_AFK_PIDFILE:-/tmp/minecraft-afk.pid}"
 readonly STATEFILE="${MINECRAFT_AFK_STATEFILE:-/tmp/minecraft-afk.state}"
 readonly DEFAULT_INTERVAL="2.00"
@@ -9,13 +11,11 @@ pid=""
 interval="$DEFAULT_INTERVAL"
 
 usage() {
-    cat <<'EOF'
-Uso:
+    message 'Uso:
   mob-farm.sh start [--interval N]
   mob-farm.sh stop
   mob-farm.sh status
-  mob-farm.sh help
-EOF
+  mob-farm.sh help'
 }
 
 is_running() {
@@ -37,8 +37,8 @@ cleanup_files() {
 
 require_dependencies() {
     if ! command -v xdotool >/dev/null 2>&1; then
-        echo "Error: xdotool no está instalado." >&2
-        echo "Instálalo con: sudo apt install xdotool" >&2
+        message 'Error: xdotool no está instalado.' >&2
+        message 'Instálalo con: sudo apt install xdotool' >&2
         return 1
     fi
 }
@@ -54,7 +54,10 @@ parse_start_args() {
     while (($# > 0)); do
         case "$1" in
             --interval|-i)
-                (($# >= 2)) || { echo "Error: --interval necesita un valor." >&2; return 1; }
+                if (($# < 2)); then
+                    message 'Error: --interval necesita un valor.' >&2
+                    return 1
+                fi
                 interval="$2"
                 shift 2
                 ;;
@@ -63,14 +66,14 @@ parse_start_args() {
                 exit 0
                 ;;
             *)
-                echo "Opción desconocida: $1" >&2
+                message 'Opción desconocida: %s' "$1" >&2
                 usage >&2
                 return 1
                 ;;
         esac
     done
     if ! validate_interval "$interval"; then
-        echo "Error: el intervalo debe ser un número >= 0.01." >&2
+        message 'Error: el intervalo debe ser un número >= 0.01.' >&2
         return 1
     fi
 }
@@ -85,7 +88,7 @@ write_state() {
 
 start_command() {
     if is_running; then
-        echo "Minecraft AFK ya está activo (PID $pid)."
+        message 'Minecraft AFK ya está activo (PID %s).' "$pid"
         status_command
         return 0
     fi
@@ -105,8 +108,8 @@ start_command() {
 
     pid=$!
     printf '%s\n' "$pid" > "$PIDFILE"
-    echo "Mob Farm iniciada (PID $pid)."
-    echo "Intervalo: $interval s"
+    message 'Mob Farm iniciada (PID %s).' "$pid"
+    message 'Intervalo: %s s' "$interval"
 }
 
 stop_command() {
@@ -116,15 +119,15 @@ stop_command() {
     fi
     cleanup_files
     release_mouse
-    echo "Minecraft AFK detenido."
+    message 'Minecraft AFK detenido.'
 }
 
 status_command() {
     if is_running; then
-        echo "Minecraft AFK está activo (PID $pid)."
+        message 'Minecraft AFK está activo (PID %s).' "$pid"
         [ -f "$STATEFILE" ] && sed 's/^/  /' "$STATEFILE"
     else
-        echo "Minecraft AFK está detenido."
+        message 'Minecraft AFK está detenido.'
     fi
 }
 
@@ -136,7 +139,7 @@ case "$command" in
     status) status_command ;;
     help|-h|--help) usage ;;
     *)
-        echo "Comando desconocido: $command" >&2
+        message 'Comando desconocido: %s' "$command" >&2
         usage >&2
         exit 1
         ;;

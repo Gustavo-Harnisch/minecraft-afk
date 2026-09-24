@@ -4,10 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
+import os
 import shlex
 import subprocess
 
 from .config import ProjectPaths
+from .i18n import _
 
 
 @dataclass(frozen=True)
@@ -37,6 +39,7 @@ class BashScriptRunner:
 
     def __init__(self, paths: ProjectPaths | None = None) -> None:
         self.paths = paths or ProjectPaths.default()
+        self.language = "auto"
         self._scripts: dict[str, Path] = {}
         self.register("minecraft-afk", "minecraft-afk.sh")
         self.register("mob-farm", "mob-farm.sh")
@@ -48,7 +51,7 @@ class BashScriptRunner:
         try:
             script_path.relative_to(scripts_dir)
         except ValueError as error:
-            raise ValueError("El script debe estar dentro de la carpeta scripts") from error
+            raise ValueError(_("El script debe estar dentro de la carpeta scripts")) from error
         self._scripts[name] = script_path
 
     def available_scripts(self) -> tuple[str, ...]:
@@ -58,9 +61,10 @@ class BashScriptRunner:
         try:
             script_path = self._scripts[name]
         except KeyError as error:
-            available = ", ".join(self.available_scripts()) or "ninguno"
+            available = ", ".join(self.available_scripts()) or _("ninguno")
             raise ValueError(
-                f"Script desconocido: {name}. Disponibles: {available}"
+                _("Script desconocido: {name}. Disponibles: {available}").format(
+                    name=name, available=available)
             ) from error
         return ["bash", str(script_path), *(str(value) for value in arguments)]
 
@@ -81,6 +85,7 @@ class BashScriptRunner:
             capture_output=True,
             timeout=timeout,
             check=False,
+            env={**os.environ, "MINECRAFT_AFK_LANGUAGE": self.language},
         )
         return CommandResult(
             command=shlex.join(argv),

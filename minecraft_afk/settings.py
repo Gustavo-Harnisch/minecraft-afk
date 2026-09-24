@@ -10,6 +10,7 @@ from typing import Any
 
 
 DEFAULT_SETTINGS: dict[str, Any] = {
+    "language": "auto",
     "mob_farm": {
         "interval": 2.0,
     },

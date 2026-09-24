@@ -13,6 +13,7 @@ gi.require_version("Gtk", "3.0")
 from gi.repository import Gdk, GLib, Gtk
 
 from .config import ProjectPaths
+from .i18n import _, set_language, SUPPORTED_LANGUAGES
 from .mining import (
     PICKAXES,
     PICKAXE_BY_KEY,
@@ -42,6 +43,8 @@ class MinecraftAfkWindow(Gtk.Window):
         self.script_runner = script_runner or BashScriptRunner(paths)
         self.paths = self.script_runner.paths
         self.settings = SettingsStore()
+        self.language = set_language(str(self.settings.data.get("language", "auto")))
+        self.script_runner.language = self.language
         self._status_timer_id: int | None = None
         self._status_fields: dict[str, Gtk.Label] = {}
         self._syncing_stone = False
@@ -70,7 +73,7 @@ class MinecraftAfkWindow(Gtk.Window):
         # La ventana usa únicamente la barra de título nativa del sistema.
         # Conservamos este label fuera del árbol visual para no acoplar la lógica
         # de estado a una cabecera personalizada.
-        self.global_status_label = Gtk.Label(label="Detenido")
+        self.global_status_label = Gtk.Label(label=_("Detenido"))
 
         self.notebook = Gtk.Notebook()
         self.notebook.set_scrollable(True)
@@ -79,9 +82,9 @@ class MinecraftAfkWindow(Gtk.Window):
 
         self.notebook.append_page(self._build_mob_page(), Gtk.Label(label="Mob Farm"))
         self.notebook.append_page(self._build_stone_page(), Gtk.Label(label="Stone Farm"))
-        self.notebook.append_page(self._build_status_page(), Gtk.Label(label="Estado"))
-        self.notebook.append_page(self._build_logs_page(), Gtk.Label(label="Logs"))
-        self.notebook.append_page(self._build_settings_page(), Gtk.Label(label="Ajustes"))
+        self.notebook.append_page(self._build_status_page(), Gtk.Label(label=_("Estado")))
+        self.notebook.append_page(self._build_logs_page(), Gtk.Label(label=_("Logs")))
+        self.notebook.append_page(self._build_settings_page(), Gtk.Label(label=_("Ajustes")))
 
     def _build_header(self) -> Gtk.Widget:
         header = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=14)
@@ -92,18 +95,18 @@ class MinecraftAfkWindow(Gtk.Window):
         title = Gtk.Label(label="Minecraft AFK")
         title.set_xalign(0)
         title.get_style_context().add_class("app-title")
-        subtitle = Gtk.Label(label="Control gráfico de farms para Linux")
+        subtitle = Gtk.Label(label=_("Control gráfico de farms para Linux"))
         subtitle.set_xalign(0)
         subtitle.get_style_context().add_class("muted")
         title_box.pack_start(title, False, False, 0)
         title_box.pack_start(subtitle, False, False, 0)
         header.pack_start(title_box, True, True, 0)
 
-        self.global_status_label = Gtk.Label(label="Detenido")
+        self.global_status_label = Gtk.Label(label=_("Detenido"))
         self.global_status_label.get_style_context().add_class("status-pill")
         header.pack_start(self.global_status_label, False, False, 0)
 
-        emergency = Gtk.Button(label="DETENER TODO")
+        emergency = Gtk.Button(label=_("DETENER TODO"))
         emergency.get_style_context().add_class("danger-button")
         emergency.connect("clicked", self._on_emergency_stop)
         header.pack_start(emergency, False, False, 0)
@@ -114,7 +117,7 @@ class MinecraftAfkWindow(Gtk.Window):
         page.pack_start(
             self._section_heading(
                 "Mob Farm",
-                "Realiza un clic izquierdo automático con el intervalo que definas.",
+                _("Realiza un clic izquierdo automático con el intervalo que definas."),
             ),
             False,
             False,
@@ -126,21 +129,21 @@ class MinecraftAfkWindow(Gtk.Window):
         card.add(grid)
 
         self.mob_interval = self._spin(2.0, 0.01, 3600.0, 0.05, digits=2)
-        self.mob_interval.set_tooltip_text("Segundos entre cada ataque")
-        self._grid_row(grid, 0, "Intervalo entre ataques", self.mob_interval, "segundos")
+        self.mob_interval.set_tooltip_text(_("Segundos entre cada ataque"))
+        self._grid_row(grid, 0, _("Intervalo entre ataques"), self.mob_interval, _("segundos"))
 
-        self.mob_state_label = Gtk.Label(label="Detenido")
+        self.mob_state_label = Gtk.Label(label=_("Detenido"))
         self.mob_state_label.set_xalign(0)
-        self._grid_row(grid, 1, "Estado", self.mob_state_label)
+        self._grid_row(grid, 1, _("Estado"), self.mob_state_label)
         page.pack_start(card, False, False, 0)
 
         buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        self.mob_start_button = Gtk.Button(label="INICIAR MOB FARM")
+        self.mob_start_button = Gtk.Button(label=_("INICIAR MOB FARM"))
         self.mob_start_button.get_style_context().add_class("primary-button")
         self.mob_start_button.connect("clicked", self._on_start_mob)
         buttons.pack_start(self.mob_start_button, True, True, 0)
 
-        self.mob_stop_button = Gtk.Button(label="DETENER")
+        self.mob_stop_button = Gtk.Button(label=_("DETENER"))
         self.mob_stop_button.connect("clicked", self._on_emergency_stop)
         buttons.pack_start(self.mob_stop_button, False, False, 0)
         page.pack_start(buttons, False, False, 0)
@@ -163,7 +166,7 @@ class MinecraftAfkWindow(Gtk.Window):
         config_box.set_border_width(18)
         config_card.add(config_box)
 
-        config_title = Gtk.Label(label="Configuración de la farm")
+        config_title = Gtk.Label(label=_("Configuración de la farm"))
         config_title.set_xalign(0)
         config_title.get_style_context().add_class("card-title")
         config_box.pack_start(config_title, False, False, 0)
@@ -176,31 +179,31 @@ class MinecraftAfkWindow(Gtk.Window):
         config_box.pack_start(grid, True, True, 0)
         body.pack_start(config_card, True, True, 0)
 
-        block = Gtk.Label(label="Cobblestone / Stone")
+        block = Gtk.Label(label=_("Cobblestone / Stone"))
         block.set_xalign(0)
-        self._grid_row(grid, 0, "Bloque", block)
+        self._grid_row(grid, 0, _("Bloque"), block)
 
         self.calculation_method_combo = Gtk.ComboBoxText()
-        self.calculation_method_combo.append("calibrated", "Calibrado · Cobblestone Farm")
-        self.calculation_method_combo.append("theoretical", "Teórico · minería continua")
-        self._grid_row(grid, 1, "Método de cálculo", self.calculation_method_combo)
+        self.calculation_method_combo.append("calibrated", _("Calibrado · Cobblestone Farm"))
+        self.calculation_method_combo.append("theoretical", _("Teórico · minería continua"))
+        self._grid_row(grid, 1, _("Método de cálculo"), self.calculation_method_combo)
 
         self.pickaxe_combo = Gtk.ComboBoxText()
         for pickaxe in PICKAXES:
-            self.pickaxe_combo.append(pickaxe.key, pickaxe.label)
-        self._grid_row(grid, 2, "Pico", self.pickaxe_combo)
+            self.pickaxe_combo.append(pickaxe.key, _(pickaxe.label))
+        self._grid_row(grid, 2, _("Pico"), self.pickaxe_combo)
 
         self.current_durability_spin = self._spin(1561, 1, 2031, 1, digits=0)
         self.current_durability_spin.set_tooltip_text(
-            "Durabilidad que muestra actualmente el pico en Minecraft"
+            _("Durabilidad que muestra actualmente el pico en Minecraft")
         )
-        self._grid_row(grid, 3, "Durabilidad actual", self.current_durability_spin)
+        self._grid_row(grid, 3, _("Durabilidad actual"), self.current_durability_spin)
 
         self.minimum_durability_spin = self._spin(100, 0, 2030, 1, digits=0)
         self.minimum_durability_spin.set_tooltip_text(
-            "Durabilidad objetivo en la que quieres detener la farm"
+            _("Durabilidad objetivo en la que quieres detener la farm")
         )
-        self._grid_row(grid, 4, "Durabilidad mínima", self.minimum_durability_spin)
+        self._grid_row(grid, 4, _("Durabilidad mínima"), self.minimum_durability_spin)
 
         self.efficiency_spin = self._spin(0, 0, 5, 1, digits=0)
         self._grid_row(grid, 5, "Efficiency", self.efficiency_spin)
@@ -213,9 +216,9 @@ class MinecraftAfkWindow(Gtk.Window):
 
         self.calibrated_seconds_spin = self._spin(1.474, 0.001, 60.0, 0.001, digits=3)
         self.calibrated_seconds_spin.set_tooltip_text(
-            "Segundos reales que tu granja tarda en consumir 1 punto de durabilidad"
+            _("Segundos reales que tu granja tarda en consumir 1 punto de durabilidad")
         )
-        self._grid_row(grid, 8, "Segundos / durabilidad", self.calibrated_seconds_spin, "s")
+        self._grid_row(grid, 8, _("Segundos / durabilidad"), self.calibrated_seconds_spin, "s")
 
         self.calibration_mode_switch = Gtk.Switch()
         self.calibration_mode_switch.set_halign(Gtk.Align.START)
@@ -223,47 +226,47 @@ class MinecraftAfkWindow(Gtk.Window):
         self.calibration_mode_switch.set_hexpand(False)
         self.calibration_mode_switch.get_style_context().add_class("calibration-toggle")
         self.calibration_mode_switch.set_tooltip_text(
-            "Activa una prueba controlada: 20 s para prepararte y después mantiene el clic durante el tiempo indicado"
+            _("Activa una prueba controlada: 20 s para prepararte y después mantiene el clic durante el tiempo indicado")
         )
 
         calibration_toggle_box = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
         calibration_toggle_box.set_hexpand(True)
         calibration_toggle_box.set_halign(Gtk.Align.FILL)
         calibration_toggle_box.pack_start(self.calibration_mode_switch, False, False, 0)
-        self.calibration_mode_state_label = Gtk.Label(label="Desactivado")
+        self.calibration_mode_state_label = Gtk.Label(label=_("Desactivado"))
         self.calibration_mode_state_label.set_xalign(0)
         self.calibration_mode_state_label.get_style_context().add_class("toggle-state")
         calibration_toggle_box.pack_start(
             self.calibration_mode_state_label, False, False, 0
         )
-        self._grid_row(grid, 9, "Modo calibración", calibration_toggle_box)
+        self._grid_row(grid, 9, _("Modo calibración"), calibration_toggle_box)
 
         self.calibration_seconds_spin = self._spin(30.0, 1.0, 60.0, 1.0, digits=0)
         self.calibration_seconds_spin.set_tooltip_text(
-            "Tiempo exacto que durará la prueba de calibración. Máximo: 60 segundos."
+            _("Tiempo exacto que durará la prueba de calibración. Máximo: 60 segundos.")
         )
-        self._grid_row(grid, 10, "Tiempo de calibración", self.calibration_seconds_spin, "s")
+        self._grid_row(grid, 10, _("Tiempo de calibración"), self.calibration_seconds_spin, "s")
 
         self.calibration_before_spin = self._spin(962, 1, 5000, 1, digits=0)
         self.calibration_before_spin.set_tooltip_text(
-            "Durabilidad del pico justo antes de iniciar la prueba"
+            _("Durabilidad del pico justo antes de iniciar la prueba")
         )
-        self._grid_row(grid, 11, "Prueba: durabilidad antes", self.calibration_before_spin)
+        self._grid_row(grid, 11, _("Prueba: durabilidad antes"), self.calibration_before_spin)
 
         self.calibration_after_spin = self._spin(943, 0, 4999, 1, digits=0)
         self.calibration_after_spin.set_tooltip_text(
-            "Durabilidad del pico al terminar la prueba"
+            _("Durabilidad del pico al terminar la prueba")
         )
-        self._grid_row(grid, 12, "Prueba: durabilidad después", self.calibration_after_spin)
+        self._grid_row(grid, 12, _("Prueba: durabilidad después"), self.calibration_after_spin)
 
-        self.apply_calibration_button = Gtk.Button(label="CALCULAR Y GUARDAR CALIBRACIÓN")
+        self.apply_calibration_button = Gtk.Button(label=_("CALCULAR Y GUARDAR CALIBRACIÓN"))
         self.apply_calibration_button.set_tooltip_text(
-            "Usa la durabilidad antes/después y el tiempo de prueba para calcular segundos por durabilidad"
+            _("Usa la durabilidad antes/después y el tiempo de prueba para calcular segundos por durabilidad")
         )
-        self._grid_row(grid, 13, "Resultado", self.apply_calibration_button)
+        self._grid_row(grid, 13, _("Resultado"), self.apply_calibration_button)
 
         self.auto_stop_check = Gtk.CheckButton(
-            label="Detener automáticamente al llegar al tiempo estimado"
+            label=_("Detener automáticamente al llegar al tiempo estimado")
         )
         self._grid_row(grid, 14, "Auto-stop", self.auto_stop_check)
 
@@ -274,7 +277,7 @@ class MinecraftAfkWindow(Gtk.Window):
         info_box.set_border_width(16)
         info_card.add(info_box)
 
-        info_title = Gtk.Label(label="Temporizador de durabilidad / calibración")
+        info_title = Gtk.Label(label=_("Temporizador de durabilidad / calibración"))
         info_title.set_xalign(0)
         info_title.get_style_context().add_class("card-title")
         info_box.pack_start(info_title, False, False, 0)
@@ -282,7 +285,7 @@ class MinecraftAfkWindow(Gtk.Window):
         # Panel principal de cuenta regresiva. Primero muestra los 20 s de
         # preparación y después reutiliza el mismo espacio para el tiempo
         # restante hasta alcanzar la durabilidad objetivo.
-        self.stone_phase_label = Gtk.Label(label="LISTO")
+        self.stone_phase_label = Gtk.Label(label=_("LISTO"))
         self.stone_phase_label.set_xalign(0)
         self.stone_phase_label.get_style_context().add_class("timer-phase")
         info_box.pack_start(self.stone_phase_label, False, False, 0)
@@ -292,7 +295,7 @@ class MinecraftAfkWindow(Gtk.Window):
         self.stone_countdown_label.get_style_context().add_class("countdown-value")
         info_box.pack_start(self.stone_countdown_label, False, False, 0)
 
-        self.stone_countdown_caption = Gtk.Label(label="Listo para iniciar")
+        self.stone_countdown_caption = Gtk.Label(label=_("Listo para iniciar"))
         self.stone_countdown_caption.set_xalign(0)
         self.stone_countdown_caption.set_line_wrap(True)
         self.stone_countdown_caption.get_style_context().add_class("muted")
@@ -301,14 +304,14 @@ class MinecraftAfkWindow(Gtk.Window):
         self.stone_progress = Gtk.ProgressBar()
         self.stone_progress.set_show_text(True)
         self.stone_progress.set_fraction(0.0)
-        self.stone_progress.set_text("Esperando")
+        self.stone_progress.set_text(_("Esperando"))
         self.stone_progress.get_style_context().add_class("stone-progress")
         info_box.pack_start(self.stone_progress, False, False, 2)
 
         separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         info_box.pack_start(separator, False, False, 6)
 
-        summary_title = Gtk.Label(label="Resumen")
+        summary_title = Gtk.Label(label=_("Resumen"))
         summary_title.set_xalign(0)
         summary_title.get_style_context().add_class("summary-title")
         info_box.pack_start(summary_title, False, False, 0)
@@ -316,15 +319,15 @@ class MinecraftAfkWindow(Gtk.Window):
         summary_separator = Gtk.Separator(orientation=Gtk.Orientation.HORIZONTAL)
         info_box.pack_start(summary_separator, False, False, 4)
 
-        self.stone_pickaxe_info = self._info_value(info_box, "Pico")
-        self.stone_max_durability_info = self._info_value(info_box, "Durabilidad máxima")
-        self.stone_spend_info = self._info_value(info_box, "Durabilidad a consumir")
-        self.stone_blocks_info = self._info_value(info_box, "Bloques estimados")
-        self.stone_method_info = self._info_value(info_box, "Método de cálculo")
-        self.stone_cycle_info = self._info_value(info_box, "Base temporal usada")
-        self.stone_duration_info = self._info_value(info_box, "Tiempo estimado hasta el objetivo")
-        self.stone_target_info = self._info_value(info_box, "Durabilidad final estimada")
-        self.stone_live_timer_info = self._info_value(info_box, "Temporizador activo")
+        self.stone_pickaxe_info = self._info_value(info_box, _("Pico"))
+        self.stone_max_durability_info = self._info_value(info_box, _("Durabilidad máxima"))
+        self.stone_spend_info = self._info_value(info_box, _("Durabilidad a consumir"))
+        self.stone_blocks_info = self._info_value(info_box, _("Bloques estimados"))
+        self.stone_method_info = self._info_value(info_box, _("Método de cálculo"))
+        self.stone_cycle_info = self._info_value(info_box, _("Base temporal usada"))
+        self.stone_duration_info = self._info_value(info_box, _("Tiempo estimado hasta el objetivo"))
+        self.stone_target_info = self._info_value(info_box, _("Durabilidad final estimada"))
+        self.stone_live_timer_info = self._info_value(info_box, _("Temporizador activo"))
 
         warning_frame = Gtk.Frame()
         warning_frame.set_shadow_type(Gtk.ShadowType.NONE)
@@ -343,20 +346,20 @@ class MinecraftAfkWindow(Gtk.Window):
         body.pack_start(info_card, True, True, 0)
 
         buttons = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        self.stone_start_button = Gtk.Button(label="INICIAR MINADO CONTINUO")
+        self.stone_start_button = Gtk.Button(label=_("INICIAR MINADO CONTINUO"))
         self.stone_start_button.get_style_context().add_class("primary-button")
         self.stone_start_button.connect("clicked", self._on_start_stone)
         buttons.pack_start(self.stone_start_button, True, True, 0)
 
-        self.calibration_start_button = Gtk.Button(label="INICIAR CALIBRACIÓN")
+        self.calibration_start_button = Gtk.Button(label=_("INICIAR CALIBRACIÓN"))
         self.calibration_start_button.get_style_context().add_class("calibration-button")
         self.calibration_start_button.set_tooltip_text(
-            "Hace 20 s de preparación y luego mantiene el clic durante el tiempo de calibración"
+            _("Hace 20 s de preparación y luego mantiene el clic durante el tiempo de calibración")
         )
         self.calibration_start_button.connect("clicked", self._on_start_calibration)
         buttons.pack_start(self.calibration_start_button, True, True, 0)
 
-        self.stone_stop_button = Gtk.Button(label="DETENER Y LIBERAR CLIC")
+        self.stone_stop_button = Gtk.Button(label=_("DETENER Y LIBERAR CLIC"))
         self.stone_stop_button.get_style_context().add_class("secondary-button")
         self.stone_stop_button.connect("clicked", self._on_emergency_stop)
         buttons.pack_start(self.stone_stop_button, False, False, 0)
@@ -382,8 +385,8 @@ class MinecraftAfkWindow(Gtk.Window):
         page = self._page_container()
         page.pack_start(
             self._section_heading(
-                "Estado",
-                "Información del proceso AFK que está ejecutándose actualmente.",
+                _("Estado"),
+                _("Información del proceso AFK que está ejecutándose actualmente."),
             ),
             False,
             False,
@@ -394,15 +397,15 @@ class MinecraftAfkWindow(Gtk.Window):
         grid = self._form_grid()
         card.add(grid)
         fields = (
-            ("running", "Estado general"),
-            ("mode", "Modo"),
+            ("running", _("Estado general")),
+            ("mode", _("Modo")),
             ("pid", "PID"),
-            ("interval", "Intervalo Mob Farm"),
-            ("pickaxe", "Pico"),
-            ("durability", "Durabilidad objetivo"),
-            ("enchantments", "Encantamientos / efectos"),
-            ("expected_blocks", "Bloques estimados"),
-            ("timer", "Temporizador restante"),
+            ("interval", _("Intervalo Mob Farm")),
+            ("pickaxe", _("Pico")),
+            ("durability", _("Durabilidad objetivo")),
+            ("enchantments", _("Encantamientos / efectos")),
+            ("expected_blocks", _("Bloques estimados")),
+            ("timer", _("Temporizador restante")),
         )
         for row, (key, caption) in enumerate(fields):
             value = Gtk.Label(label="—")
@@ -413,10 +416,10 @@ class MinecraftAfkWindow(Gtk.Window):
         page.pack_start(card, False, False, 0)
 
         controls = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=10)
-        refresh = Gtk.Button(label="Actualizar")
+        refresh = Gtk.Button(label=_("Actualizar"))
         refresh.connect("clicked", lambda *_: self._refresh_runtime_status())
         controls.pack_start(refresh, False, False, 0)
-        stop = Gtk.Button(label="DETENER TODO")
+        stop = Gtk.Button(label=_("DETENER TODO"))
         stop.get_style_context().add_class("danger-button")
         stop.connect("clicked", self._on_emergency_stop)
         controls.pack_end(stop, False, False, 0)
@@ -427,8 +430,8 @@ class MinecraftAfkWindow(Gtk.Window):
         page = self._page_container()
         page.pack_start(
             self._section_heading(
-                "Logs",
-                "Aquí se muestra la salida de los scripts. No necesitas escribir comandos.",
+                _("Logs"),
+                _("Aquí se muestra la salida de los scripts. No necesitas escribir comandos."),
             ),
             False,
             False,
@@ -446,7 +449,7 @@ class MinecraftAfkWindow(Gtk.Window):
         scroll.add(self.log_view)
         page.pack_start(scroll, True, True, 0)
 
-        clear = Gtk.Button(label="Limpiar logs")
+        clear = Gtk.Button(label=_("Limpiar logs"))
         clear.connect("clicked", lambda *_: self.log_buffer.set_text(""))
         page.pack_start(clear, False, False, 0)
         return page
@@ -455,8 +458,8 @@ class MinecraftAfkWindow(Gtk.Window):
         page = self._page_container()
         page.pack_start(
             self._section_heading(
-                "Ajustes",
-                "La configuración de la GUI se guarda automáticamente.",
+                _("Ajustes"),
+                _("La configuración de la GUI se guarda automáticamente."),
             ),
             False,
             False,
@@ -471,31 +474,61 @@ class MinecraftAfkWindow(Gtk.Window):
         config_path.set_xalign(0)
         config_path.set_selectable(True)
         config_path.set_line_wrap(True)
-        self._grid_row(grid, 0, "Archivo de configuración", config_path)
+        self._grid_row(grid, 0, _("Archivo de configuración"), config_path)
 
         scripts_path = Gtk.Label(label=str(self.paths.scripts))
         scripts_path.set_xalign(0)
         scripts_path.set_selectable(True)
         scripts_path.set_line_wrap(True)
-        self._grid_row(grid, 1, "Scripts Bash", scripts_path)
+        self._grid_row(grid, 1, _("Scripts Bash"), scripts_path)
 
         runtime = Gtk.Label(label="/tmp/minecraft-afk.pid  ·  /tmp/minecraft-afk.state")
         runtime.set_xalign(0)
         runtime.set_selectable(True)
-        self._grid_row(grid, 2, "Estado de ejecución", runtime)
+        self._grid_row(grid, 2, _("Estado de ejecución"), runtime)
 
         note = Gtk.Label(
             label=(
-                "Requiere xdotool y una sesión X11. En Linux Mint puedes instalar "
-                "xdotool con: sudo apt install xdotool"
+                _("Requiere xdotool y una sesión X11. En Linux Mint puedes instalar "
+                "xdotool con: sudo apt install xdotool")
             )
         )
         note.set_xalign(0)
         note.set_line_wrap(True)
         note.get_style_context().add_class("muted")
-        self._grid_row(grid, 3, "Compatibilidad", note)
+        self._grid_row(grid, 3, _("Compatibilidad"), note)
+
+        self.language_combo = Gtk.ComboBoxText()
+        self.language_combo.append("auto", _("Automático (idioma del sistema)"))
+        self.language_combo.append("es", "Español")
+        self.language_combo.append("en", "English")
+        language = str(self.settings.data.get("language", "auto"))
+        self.language_combo.set_active_id(language if language in SUPPORTED_LANGUAGES else "auto")
+        self.language_combo.connect("changed", self._on_language_changed)
+        self._grid_row(grid, 4, _("Idioma"), self.language_combo)
+        self.language_notice = Gtk.Label(label="")
+        self.language_notice.set_xalign(0)
+        self.language_notice.set_line_wrap(True)
+        self._grid_row(grid, 5, "", self.language_notice)
         page.pack_start(card, False, False, 0)
         return page
+
+    def _on_language_changed(self, _combo: Gtk.ComboBoxText) -> None:
+        if self._loading_settings:
+            return
+        language = self.language_combo.get_active_id() or "auto"
+        previous = str(self.settings.data.get("language", "auto"))
+        self.settings.data["language"] = language
+        if self._save_settings_safely():
+            self.language_notice.set_text(_("Reinicia la aplicación para aplicar el idioma."))
+        else:
+            self.settings.data["language"] = previous
+            self._loading_settings = True
+            try:
+                self.language_combo.set_active_id(previous if previous in SUPPORTED_LANGUAGES else "auto")
+            finally:
+                self._loading_settings = False
+            self.language_notice.set_text(_("No se pudo guardar el idioma. Revisa los logs."))
 
     # --------------------------------------------------------------- Helpers
     def _page_container(self) -> Gtk.Box:
@@ -675,7 +708,7 @@ class MinecraftAfkWindow(Gtk.Window):
     def _sync_calibration_mode_ui(self) -> None:
         active = self.calibration_mode_switch.get_active()
         self.calibration_mode_state_label.set_text(
-            "Activado" if active else "Desactivado"
+            _("Activado") if active else _("Desactivado")
         )
         state_context = self.calibration_mode_state_label.get_style_context()
         if active:
@@ -717,8 +750,9 @@ class MinecraftAfkWindow(Gtk.Window):
                 self.calibration_seconds_spin.get_value(),
             )
         except ValueError as error:
-            self._append_log(f"Calibración inválida: {error}")
-            self.stone_warning_label.set_text(f"Calibración inválida: {error}")
+            message = _("Calibración inválida: {error}").format(error=error)
+            self._append_log(message)
+            self.stone_warning_label.set_text(message)
             return
 
         self._syncing_stone = True
@@ -731,19 +765,21 @@ class MinecraftAfkWindow(Gtk.Window):
         self.settings.data["stone_farm"] = self._stone_config()
         self._save_settings_safely()
         self._update_stone_estimate()
-        self._append_log(
-            "Calibración guardada | "
-            f"Segundos/durabilidad: {seconds_per_durability:.3f} s | "
-            f"Prueba: {self.calibration_before_spin.get_value_as_int()} → "
-            f"{self.calibration_after_spin.get_value_as_int()} en "
-            f"{self.calibration_seconds_spin.get_value():.0f} s"
-        )
+        self._append_log(_(
+            "Calibración guardada | Segundos/durabilidad: {rate:.3f} s | "
+            "Prueba: {before} → {after} en {seconds:.0f} s"
+        ).format(rate=seconds_per_durability,
+                 before=self.calibration_before_spin.get_value_as_int(),
+                 after=self.calibration_after_spin.get_value_as_int(),
+                 seconds=self.calibration_seconds_spin.get_value()))
 
-    def _save_settings_safely(self) -> None:
+    def _save_settings_safely(self) -> bool:
         try:
             self.settings.save()
+            return True
         except OSError as error:
-            self._append_log(f"No se pudo guardar la configuración: {error}")
+            self._append_log(_("No se pudo guardar la configuración: {error}").format(error=error))
+            return False
 
     def _update_stone_estimate(self) -> None:
         config = self._stone_config()
@@ -765,40 +801,40 @@ class MinecraftAfkWindow(Gtk.Window):
             return
 
         pickaxe = PICKAXE_BY_KEY[str(config["pickaxe"])]
-        self.stone_pickaxe_info.set_text(pickaxe.label)
+        self.stone_pickaxe_info.set_text(_(pickaxe.label))
         self.stone_max_durability_info.set_text(str(pickaxe.max_durability))
         self.stone_spend_info.set_text(str(result.durability_to_spend))
         self.stone_blocks_info.set_text(f"≈ {result.expected_blocks}")
         if result.calculation_method == "calibrated":
-            self.stone_method_info.set_text("Calibrado · datos reales de la farm")
+            self.stone_method_info.set_text(_("Calibrado · datos reales de la farm"))
             self.stone_cycle_info.set_text(
-                f"{result.seconds_per_durability:.3f} s / punto de durabilidad"
+                _("{seconds:.3f} s / punto de durabilidad").format(seconds=result.seconds_per_durability)
             )
         else:
-            self.stone_method_info.set_text("Teórico · mecánica vanilla")
+            self.stone_method_info.set_text(_("Teórico · mecánica vanilla"))
             self.stone_cycle_info.set_text(
-                f"≈ {result.continuous_cycle_seconds:.2f} s / bloque"
+                _("≈ {seconds:.2f} s / bloque").format(seconds=result.continuous_cycle_seconds)
             )
         self.stone_duration_info.set_text(format_duration(result.estimated_duration_seconds))
         self.stone_target_info.set_text(str(config["minimum_durability"]))
 
         if result.calculation_method == "calibrated":
-            warning = (
-                f"Calibración activa: {result.seconds_per_durability:.3f} s por punto de durabilidad. "
+            warning = _(
+                "Calibración activa: {seconds:.3f} s por punto de durabilidad. "
                 "Este valor ya incorpora el tiempo muerto del generador agua/lava. "
                 "Recalibra si cambias la farm, el pico, Efficiency, Unbreaking o Haste."
-            )
+            ).format(seconds=result.seconds_per_durability)
             if int(config["unbreaking"]) > 0:
-                warning += " Con Unbreaking seguirá existiendo variación aleatoria."
+                warning += _(" Con Unbreaking seguirá existiendo variación aleatoria.")
             self.stone_warning_label.set_text(warning)
         elif int(config["unbreaking"]) > 0:
             self.stone_warning_label.set_text(
-                "Modo teórico: Unbreaking hace que el consumo sea aleatorio y este cálculo no "
-                "incluye el tiempo real que tarda tu generador de agua/lava en crear el siguiente bloque."
+                _("Modo teórico: Unbreaking hace que el consumo sea aleatorio y este cálculo no "
+                "incluye el tiempo real que tarda tu generador de agua/lava en crear el siguiente bloque.")
             )
         else:
             self.stone_warning_label.set_text(
-                "Modo teórico: calcula la minería vanilla, pero no mide el retraso real del generador de cobblestone."
+                _("Modo teórico: calcula la minería vanilla, pero no mide el retraso real del generador de cobblestone.")
             )
 
     # -------------------------------------------------------------- Commands
@@ -814,14 +850,14 @@ class MinecraftAfkWindow(Gtk.Window):
         # Feedback inmediato: no esperamos a que Bash escriba el state file para
         # mostrar que comenzó la preparación. En cuanto llega el estado real, el
         # refresco periódico reemplaza estos valores por la cuenta exacta.
-        self.stone_phase_label.set_text("PREPARACIÓN")
+        self.stone_phase_label.set_text(_("PREPARACIÓN"))
         self.stone_countdown_label.set_text("00:20")
         self.stone_countdown_caption.set_text(
-            "Prepárate: cambia a Minecraft y apunta al bloque que quieres minar."
+            _("Prepárate: cambia a Minecraft y apunta al bloque que quieres minar.")
         )
         self.stone_progress.set_fraction(0.0)
-        self.stone_progress.set_text("Preparación 0%")
-        self.stone_live_timer_info.set_text("Preparación · 00:20")
+        self.stone_progress.set_text(_("Preparación 0%"))
+        self.stone_live_timer_info.set_text(_("Preparación · 00:20"))
 
         config = self._stone_config()
         try:
@@ -838,19 +874,18 @@ class MinecraftAfkWindow(Gtk.Window):
                 ),
             )
         except ValueError as error:
-            self._append_log(f"Configuración inválida: {error}")
+            self._append_log(_("Configuración inválida: {error}").format(error=error))
             return
 
         method_label = (
-            "Calibrado" if plan.calculation_method == "calibrated" else "Teórico"
+            _("Calibrado") if plan.calculation_method == "calibrated" else _("Teórico")
         )
-        self._append_log(
-            "Stone Farm | "
-            f"Método: {method_label} | "
-            f"Segundos/durabilidad: {plan.seconds_per_durability:.3f} s | "
-            f"Durabilidad: {config['current_durability']} → {config['minimum_durability']} | "
-            f"Tiempo objetivo: {format_duration(plan.estimated_duration_seconds)}"
-        )
+        self._append_log(_(
+            "Stone Farm | Método: {method} | Segundos/durabilidad: {rate:.3f} s | "
+            "Durabilidad: {current} → {minimum} | Tiempo objetivo: {duration}"
+        ).format(method=method_label, rate=plan.seconds_per_durability,
+                 current=config["current_durability"], minimum=config["minimum_durability"],
+                 duration=format_duration(plan.estimated_duration_seconds)))
 
         self.settings.data["stone_farm"] = config
         self._save_settings_safely()
@@ -885,28 +920,27 @@ class MinecraftAfkWindow(Gtk.Window):
         seconds = max(1.0, min(60.0, self.calibration_seconds_spin.get_value()))
         before = self.calibration_before_spin.get_value_as_int()
         if before < 1:
-            self._append_log("Calibración inválida: la durabilidad inicial debe ser al menos 1.")
+            self._append_log(_("Calibración inválida: la durabilidad inicial debe ser al menos 1."))
             return
 
         # Feedback inmediato mientras Bash prepara el proceso.
-        self.stone_phase_label.set_text("PREPARACIÓN · CALIBRACIÓN")
+        self.stone_phase_label.set_text(_("PREPARACIÓN · CALIBRACIÓN"))
         self.stone_countdown_label.set_text("00:20")
         self.stone_countdown_caption.set_text(
-            "Prepárate: cambia a Minecraft y apunta al bloque de la cobblestone farm."
+            _("Prepárate: cambia a Minecraft y apunta al bloque de la cobblestone farm.")
         )
         self.stone_progress.set_fraction(0.0)
-        self.stone_progress.set_text("Preparación 0%")
-        self.stone_live_timer_info.set_text("Preparación · 00:20")
+        self.stone_progress.set_text(_("Preparación 0%"))
+        self.stone_live_timer_info.set_text(_("Preparación · 00:20"))
 
         config = self._stone_config()
         self.settings.data["stone_farm"] = config
         self._save_settings_safely()
-        self._append_log(
-            "Calibración iniciada | "
-            f"Duración de prueba: {seconds:.0f} s | "
-            f"Durabilidad inicial: {before} | "
-            f"Segundos/durabilidad actual: {float(config['calibrated_seconds_per_durability']):.3f} s"
-        )
+        self._append_log(_(
+            "Calibración iniciada | Duración de prueba: {seconds:.0f} s | "
+            "Durabilidad inicial: {before} | Segundos/durabilidad actual: {rate:.3f} s"
+        ).format(seconds=seconds, before=before,
+                 rate=float(config["calibrated_seconds_per_durability"])))
         self._run_script(
             "stone-farm",
             "calibrate",
@@ -938,12 +972,12 @@ class MinecraftAfkWindow(Gtk.Window):
         if result.output:
             self._append_log(result.output)
         if result.returncode != 0:
-            self._append_log(f"El comando terminó con código {result.returncode}.")
+            self._append_log(_("El comando terminó con código {code}.").format(code=result.returncode))
         self._refresh_runtime_status()
         return False
 
     def _on_command_error(self, command: str, message: str) -> bool:
-        self._append_log(f"Error ejecutando {command}: {message}")
+        self._append_log(_("Error ejecutando {command}: {message}").format(command=command, message=message))
         self._refresh_runtime_status()
         return False
 
@@ -993,7 +1027,7 @@ class MinecraftAfkWindow(Gtk.Window):
         """Devuelve fase, reloj, explicación, progreso y texto de la barra."""
 
         if state.get("mode") != "stone_farm":
-            return "LISTO", "--:--", "Listo para iniciar", 0.0, "Esperando"
+            return "ready", "--:--", _("Listo para iniciar"), 0.0, _("Esperando")
 
         try:
             started = self._state_float(state["start_epoch"])
@@ -1004,7 +1038,7 @@ class MinecraftAfkWindow(Gtk.Window):
                 0.0, self._state_float(state.get("start_delay_seconds", "20"))
             )
         except (KeyError, ValueError):
-            return "LISTO", "--:--", "Esperando datos del proceso", 0.0, "Esperando"
+            return "ready", "--:--", _("Esperando datos del proceso"), 0.0, _("Esperando")
 
         now = time.time()
 
@@ -1018,25 +1052,25 @@ class MinecraftAfkWindow(Gtk.Window):
                 progress = 1.0
             percent = int(round(progress * 100))
             caption = (
-                "Cambia a Minecraft y apunta al bloque de la cobblestone farm. La prueba comenzará automáticamente."
+                _("Cambia a Minecraft y apunta al bloque de la cobblestone farm. La prueba comenzará automáticamente.")
                 if run_type == "calibration"
-                else "Cambia a Minecraft y apunta al bloque objetivo."
+                else _("Cambia a Minecraft y apunta al bloque objetivo.")
             )
             return (
-                "PREPARACIÓN · CALIBRACIÓN" if run_type == "calibration" else "PREPARACIÓN",
+                "calibration_preparing" if run_type == "calibration" else "preparing",
                 self._format_clock(remaining),
                 caption,
                 progress,
-                f"Preparación {percent}%",
+                _("Preparación {percent}%").format(percent=percent),
             )
 
         if state.get("auto_stop") != "1":
             return (
-                "MINANDO",
+                "mining",
                 "∞",
-                "Clic izquierdo mantenido · Auto-stop desactivado.",
+                _("Clic izquierdo mantenido · Auto-stop desactivado."),
                 0.0,
-                "Minando sin límite",
+                _("Minando sin límite"),
             )
 
         elapsed = max(0.0, now - started)
@@ -1045,45 +1079,59 @@ class MinecraftAfkWindow(Gtk.Window):
         percent = int(round(progress * 100))
         if run_type == "calibration":
             return (
-                "CALIBRANDO",
+                "calibrating",
                 self._format_clock(remaining),
-                "Prueba controlada: manteniendo el clic durante el tiempo seleccionado.",
+                _("Prueba controlada: manteniendo el clic durante el tiempo seleccionado."),
                 progress,
-                f"Calibrando {percent}%",
+                _("Calibrando {percent}%").format(percent=percent),
             )
 
         return (
-            "MINANDO",
+            "mining",
             self._format_clock(remaining),
-            "Tiempo restante hasta alcanzar la durabilidad mínima estimada.",
+            _("Tiempo restante hasta alcanzar la durabilidad mínima estimada."),
             progress,
-            f"Minando {percent}%",
+            _("Minando {percent}%").format(percent=percent),
         )
 
     def _remaining_timer(self, state: dict[str, str]) -> str:
         phase, clock, _caption, _progress, _bar_text = self._stone_timer_snapshot(state)
-        if phase.startswith("PREPARACIÓN"):
-            return f"Preparación · {clock}"
-        if phase == "CALIBRANDO":
-            return f"Calibrando · {clock}"
-        if phase == "MINANDO":
-            return f"Minando · {clock}"
+        if phase in {"preparing", "calibration_preparing"}:
+            return _("Preparación · {clock}").format(clock=clock)
+        if phase == "calibrating":
+            return _("Calibrando · {clock}").format(clock=clock)
+        if phase == "mining":
+            return _("Minando · {clock}").format(clock=clock)
         return "—"
+
+    @staticmethod
+    def _phase_label(phase: str) -> str:
+        return {
+            "ready": _("LISTO"),
+            "preparing": _("PREPARACIÓN"),
+            "calibration_preparing": _("PREPARACIÓN · CALIBRACIÓN"),
+            "mining": _("MINANDO"),
+            "calibrating": _("CALIBRANDO"),
+        }[phase]
 
     def _refresh_runtime_status(self) -> bool:
         running, pid, state = self._read_runtime_state()
         mode = state.get("mode", "")
-        mode_label = state.get("mode_label", "—")
+        mode_label = {
+            "mob_farm": "Mob Farm",
+            "stone_farm": _("Calibración Stone Farm")
+            if state.get("run_type") == "calibration" else "Stone Farm",
+        }.get(mode, "—")
 
         if running:
-            self.global_status_label.set_text(f"{mode_label} activa")
+            self.global_status_label.set_text(_("{mode} activa").format(mode=mode_label))
             self.global_status_label.get_style_context().add_class("running")
         else:
-            self.global_status_label.set_text("Detenido")
+            self.global_status_label.set_text(_("Detenido"))
             self.global_status_label.get_style_context().remove_class("running")
 
         self.mob_state_label.set_text(
-            "Activa" if running and mode == "mob_farm" else "Detenida"
+            _("Activa") if running and mode == "mob_farm" else _("Detenida")
         )
         self.mob_start_button.set_sensitive(not running)
         calibration_mode = self.calibration_mode_switch.get_active()
@@ -1113,7 +1161,7 @@ class MinecraftAfkWindow(Gtk.Window):
         remaining = self._remaining_timer(state) if running else "—"
         if running and mode == "stone_farm":
             phase, clock, caption, progress, bar_text = self._stone_timer_snapshot(state)
-            self.stone_phase_label.set_text(phase)
+            self.stone_phase_label.set_text(self._phase_label(phase))
             self.stone_countdown_label.set_text(clock)
             self.stone_countdown_caption.set_text(caption)
             self.stone_progress.set_fraction(progress)
@@ -1122,29 +1170,29 @@ class MinecraftAfkWindow(Gtk.Window):
             self._stone_completion_visible = False
         elif self._stone_completion_visible:
             if self._last_completion_was_calibration:
-                self.stone_phase_label.set_text("CALIBRACIÓN COMPLETADA")
+                self.stone_phase_label.set_text(_("CALIBRACIÓN COMPLETADA"))
                 self.stone_countdown_label.set_text("00:00")
                 self.stone_countdown_caption.set_text(
-                    "Prueba terminada. Mira la durabilidad del pico, escríbela en 'Prueba: durabilidad después' y pulsa CALCULAR Y GUARDAR CALIBRACIÓN."
+                    _("Prueba terminada. Mira la durabilidad del pico, escríbela en 'Prueba: durabilidad después' y pulsa CALCULAR Y GUARDAR CALIBRACIÓN.")
                 )
                 self.stone_progress.set_fraction(1.0)
-                self.stone_progress.set_text("Calibración 100%")
-                self.stone_live_timer_info.set_text("Calibración completada")
+                self.stone_progress.set_text(_("Calibración 100%"))
+                self.stone_live_timer_info.set_text(_("Calibración completada"))
             else:
-                self.stone_phase_label.set_text("OBJETIVO COMPLETADO")
+                self.stone_phase_label.set_text(_("OBJETIVO COMPLETADO"))
                 self.stone_countdown_label.set_text("00:00")
                 self.stone_countdown_caption.set_text(
-                    "Tiempo objetivo finalizado. El clic izquierdo fue liberado."
+                    _("Tiempo objetivo finalizado. El clic izquierdo fue liberado.")
                 )
                 self.stone_progress.set_fraction(1.0)
-                self.stone_progress.set_text("Completado 100%")
-                self.stone_live_timer_info.set_text("Completado")
+                self.stone_progress.set_text(_("Completado 100%"))
+                self.stone_live_timer_info.set_text(_("Completado"))
         else:
-            self.stone_phase_label.set_text("LISTO")
+            self.stone_phase_label.set_text(_("LISTO"))
             self.stone_countdown_label.set_text("--:--")
-            self.stone_countdown_caption.set_text("Listo para iniciar")
+            self.stone_countdown_caption.set_text(_("Listo para iniciar"))
             self.stone_progress.set_fraction(0.0)
-            self.stone_progress.set_text("Esperando")
+            self.stone_progress.set_text(_("Esperando"))
             self.stone_live_timer_info.set_text("—")
 
         durability = "—"
@@ -1152,16 +1200,17 @@ class MinecraftAfkWindow(Gtk.Window):
         expected_blocks = "—"
         if running and mode == "stone_farm":
             if state.get("run_type") == "calibration":
-                durability = f"Inicio: {state.get('current_durability', '—')}"
-                enchantments = f"Prueba de {state.get('calibration_duration_seconds', state.get('estimated_duration_seconds', '—'))} s"
-                expected_blocks = "Midiendo"
+                durability = _("Inicio: {durability}").format(durability=state.get("current_durability", "—"))
+                enchantments = _("Prueba de {seconds} s").format(seconds=state.get(
+                    "calibration_duration_seconds", state.get("estimated_duration_seconds", "—")))
+                expected_blocks = _("Midiendo")
             else:
                 durability = (
                     f"{state.get('current_durability', '—')} → "
                     f"{state.get('minimum_durability', '—')}"
                 )
                 method_label = (
-                    "Calibrado" if state.get("calculation_method") == "calibrated" else "Teórico"
+                    _("Calibrado") if state.get("calculation_method") == "calibrated" else _("Teórico")
                 )
                 enchantments = (
                     f"Efficiency {state.get('efficiency', '0')} · "
@@ -1171,13 +1220,13 @@ class MinecraftAfkWindow(Gtk.Window):
                 expected_blocks = state.get("expected_blocks", "—")
 
         values = {
-            "running": "ACTIVO" if running else "DETENIDO",
+            "running": _("ACTIVO") if running else _("DETENIDO"),
             "mode": mode_label if running else "—",
             "pid": pid or "—",
             "interval": self._format_seconds(state.get("interval"))
             if running and mode == "mob_farm"
             else "—",
-            "pickaxe": state.get("pickaxe", "—") if running and mode == "stone_farm" else "—",
+            "pickaxe": _(state.get("pickaxe", "—")) if running and mode == "stone_farm" else "—",
             "durability": durability,
             "enchantments": enchantments,
             "expected_blocks": expected_blocks,
