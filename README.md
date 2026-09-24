@@ -1,14 +1,6 @@
 # Minecraft AFK
 
-<!--
-BANNER: guarda la imagen en docs/assets/banner.png, elimina el párrafo reservado
-y coloca la siguiente línea fuera de este comentario. Puedes cambiar la ruta
-si utilizas otro nombre o formato de imagen.
-
-![Banner de Minecraft AFK](docs/assets/banner.png)
--->
-
-> *Espacio reservado para el banner del proyecto.*
+![Banner de Minecraft AFK](banner.png)
 
 Bienvenido a Minecraft AFK. Si usas una granja de ataques o un generador de piedra y quieres controlar las acciones repetitivas desde una ventana, aquí encontrarás una herramienta para hacerlo. Puedes ajustar los ataques, preparar una sesión de minado, estimar el consumo de tu pico y consultar lo que está ocurriendo sin tener que recordar comandos. La interfaz está disponible en español e inglés y guarda tus ajustes para la próxima vez.
 
